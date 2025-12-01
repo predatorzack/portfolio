@@ -1,10 +1,11 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { TrendingUp, Users, Zap } from "lucide-react";
+import { TrendingUp, Users, Zap, ExternalLink } from "lucide-react";
 
 const products = [
   {
     company: "Alphadroid",
+    companyUrl: "https://www.alphadroid.io/",
     role: "Product Manager",
     period: "Apr 2024 - Present",
     title: "HeyAlpha - Conversational AI SaaS Platform",
@@ -26,6 +27,7 @@ const products = [
   },
   {
     company: "DotPe",
+    companyUrl: "https://www.dotpe.in/",
     role: "Product Manager",
     period: "Jul 2021 - Oct 2022",
     title: "Bifrost - B2B SaaS Platform for FnB",
@@ -48,6 +50,7 @@ const products = [
   },
   {
     company: "ElectricPe",
+    companyUrl: "https://electricpe.com/",
     role: "Product Manager",
     period: "May 2023 - Oct 2023",
     title: "B2C User Retention & Growth",
@@ -69,6 +72,7 @@ const products = [
   },
   {
     company: "Spinny",
+    companyUrl: "https://www.spinny.com/",
     role: "Associate Program Manager",
     period: "Mar 2019 - Jul 2021",
     title: "Refurbishment CRM & Operations",
@@ -115,7 +119,15 @@ const Products = () => {
                       {product.title}
                     </h3>
                   </div>
-                  <p className="text-accent font-medium">{product.company}</p>
+                  <a 
+                    href={product.companyUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-accent hover:text-accent/80 font-medium inline-flex items-center gap-2 transition-colors group"
+                  >
+                    {product.company}
+                    <ExternalLink className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                  </a>
                   <p className="text-sm text-muted-foreground">{product.role} • {product.period}</p>
                 </div>
               </div>
