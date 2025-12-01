@@ -13,11 +13,7 @@ const Hero = () => {
       <div className="container mx-auto px-6 z-10">
         <div className="max-w-4xl mx-auto text-center">
           <div className="mb-8 animate-fade-in-up">
-            <img 
-              src={profileImage} 
-              alt="Sohit Kumar" 
-              className="w-40 h-40 md:w-48 md:h-48 rounded-full mx-auto object-cover border-4 border-accent shadow-[0_0_40px_rgba(6,182,212,0.3)]"
-            />
+            <img src={profileImage} alt="Sohit Kumar" className="w-40 h-40 md:w-48 md:h-48 rounded-full mx-auto object-cover border-4 border-accent shadow-[0_0_40px_rgba(6,182,212,0.3)]" />
           </div>
           <h1 className="font-['Space_Grotesk'] text-5xl md:text-7xl lg:text-8xl font-bold text-primary-foreground mb-6 animate-fade-in-up [animation-delay:200ms] opacity-0 [animation-fill-mode:forwards]">
             Hi, I'm{" "}
@@ -41,7 +37,7 @@ const Hero = () => {
             <Button size="lg" variant="outline" onClick={() => scrollToSection("contact")} className="border-accent/50 hover:border-accent font-medium text-lg px-8 bg-accent text-primary">
               Get In Touch
             </Button>
-            <Button size="lg" variant="outline" onClick={() => window.open('/Sohit_Kumar_Resume.pdf', '_blank')} className="border-accent/50 hover:border-accent font-medium text-lg px-8 gap-2 text-primary bg-accent">
+            <Button size="lg" variant="outline" onClick={() => window.open('/Sohit_Kumar_Resume.pdf', '_blank')} className="border-accent/50 hover:border-accent font-medium text-lg px-8 gap-2 text-primary bg-primary-foreground">
               <Download size={20} />
               Resume
             </Button>
