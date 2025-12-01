@@ -1,19 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { TrendingUp, Users, Zap, ExternalLink } from "lucide-react";
-import ProductCarousel from "@/components/ProductCarousel";
-import heyalpha1 from "@/assets/heyalpha-healthcare.png";
-import heyalpha2 from "@/assets/heyalpha-hospitality.png";
-import heyalpha3 from "@/assets/heyalpha-platform.png";
-import bifrost1 from "@/assets/bifrost-1.png";
-import bifrost2 from "@/assets/bifrost-2.png";
-import bifrost3 from "@/assets/bifrost-3.png";
-import electricpe1 from "@/assets/electricpe-1.png";
-import electricpe2 from "@/assets/electricpe-2.png";
-import electricpe3 from "@/assets/electricpe-3.png";
-import spinny1 from "@/assets/spinny-1.png";
-import spinny2 from "@/assets/spinny-2.png";
-import spinny3 from "@/assets/spinny-3.png";
 
 const products = [
   {
@@ -36,8 +23,7 @@ const products = [
       { icon: Zap, label: "30+", sublabel: "Enterprise Deployments" }
     ],
     tags: ["AI/ML", "Multi-Agent Systems", "B2B SaaS", "Healthcare", "Hospitality"],
-    color: "from-purple-500/5 to-pink-500/5",
-    screenshots: [heyalpha1, heyalpha2, heyalpha3]
+    color: "from-purple-500/5 to-pink-500/5"
   },
   {
     company: "DotPe",
@@ -60,8 +46,7 @@ const products = [
       { icon: Zap, label: "20%", sublabel: "Turnaround Reduction" }
     ],
     tags: ["B2B SaaS", "FnB Tech", "Enterprise Sales", "Order Management"],
-    color: "from-orange-500/5 to-red-500/5",
-    screenshots: [bifrost1, bifrost2, bifrost3]
+    color: "from-orange-500/5 to-red-500/5"
   },
   {
     company: "ElectricPe",
@@ -83,8 +68,7 @@ const products = [
       { icon: Zap, label: "Web", sublabel: "SEO & Conversion" }
     ],
     tags: ["B2C", "User Retention", "Gamification", "UX Design"],
-    color: "from-green-500/5 to-emerald-500/5",
-    screenshots: [electricpe1, electricpe2, electricpe3]
+    color: "from-green-500/5 to-emerald-500/5"
   },
   {
     company: "Spinny",
@@ -106,8 +90,7 @@ const products = [
       { icon: Zap, label: "15%", sublabel: "Cost Savings" }
     ],
     tags: ["Internal Tools", "Operations", "Automation", "Analytics"],
-    color: "from-blue-500/5 to-cyan-500/5",
-    screenshots: [spinny1, spinny2, spinny3]
+    color: "from-blue-500/5 to-cyan-500/5"
   }
 ];
 
@@ -129,74 +112,64 @@ const Products = () => {
               className={`p-8 border-border hover:border-accent transition-all duration-300 bg-gradient-to-br ${product.color} animate-fade-in-up`}
               style={{ animationDelay: `${index * 150}ms`, animationFillMode: 'forwards', opacity: 0 }}
             >
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {/* Left Section - Information */}
-                <div className="flex flex-col">
-                  <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-4">
+              <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-4">
+                <div>
+                  <div className="flex items-center gap-3 mb-2">
+                    <h3 className="font-['Space_Grotesk'] text-2xl font-bold text-foreground">
+                      {product.title}
+                    </h3>
+                  </div>
+                  <a 
+                    href={product.companyUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-accent hover:text-accent/80 font-medium inline-flex items-center gap-2 transition-colors group"
+                  >
+                    {product.company}
+                    <ExternalLink className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                  </a>
+                  <p className="text-sm text-muted-foreground">{product.role} • {product.period}</p>
+                </div>
+              </div>
+              
+              <p className="text-foreground mb-6">
+                {product.description}
+              </p>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 p-4 bg-background/50 rounded-lg">
+                {product.metrics.map((metric, idx) => (
+                  <div key={idx} className="flex items-center gap-3">
+                    <metric.icon className="w-8 h-8 text-accent flex-shrink-0" />
                     <div>
-                      <div className="flex items-center gap-3 mb-2">
-                        <h3 className="font-['Space_Grotesk'] text-2xl font-bold text-foreground">
-                          {product.title}
-                        </h3>
-                      </div>
-                      <a 
-                        href={product.companyUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-accent hover:text-accent/80 font-medium inline-flex items-center gap-2 transition-colors group"
-                      >
-                        {product.company}
-                        <ExternalLink className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                      </a>
-                      <p className="text-sm text-muted-foreground">{product.role} • {product.period}</p>
+                      <p className="font-bold text-foreground text-lg">{metric.label}</p>
+                      <p className="text-xs text-muted-foreground">{metric.sublabel}</p>
                     </div>
                   </div>
-                  
-                  <p className="text-foreground mb-6">
-                    {product.description}
-                  </p>
-
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 p-4 bg-background/50 rounded-lg">
-                    {product.metrics.map((metric, idx) => (
-                      <div key={idx} className="flex items-center gap-3">
-                        <metric.icon className="w-8 h-8 text-accent flex-shrink-0" />
-                        <div>
-                          <p className="font-bold text-foreground text-lg">{metric.label}</p>
-                          <p className="text-xs text-muted-foreground">{metric.sublabel}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  
-                  <div className="mb-6">
-                    <h4 className="font-semibold text-foreground mb-3">Key Achievements:</h4>
-                    <ul className="space-y-2">
-                      {product.achievements.map((achievement, idx) => (
-                        <li key={idx} className="text-muted-foreground flex items-start">
-                          <span className="text-accent mr-2 mt-1">•</span>
-                          <span>{achievement}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  
-                  <div className="flex flex-wrap gap-2">
-                    {product.tags.map((tag, tagIndex) => (
-                      <Badge 
-                        key={tagIndex}
-                        variant="secondary"
-                        className="bg-accent/10 text-accent hover:bg-accent/20"
-                      >
-                        {tag}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Right Section - Visuals */}
-                <div className="flex items-center justify-center bg-background/30 rounded-lg p-6 min-h-[400px]">
-                  <ProductCarousel images={product.screenshots} />
-                </div>
+                ))}
+              </div>
+              
+              <div className="mb-6">
+                <h4 className="font-semibold text-foreground mb-3">Key Achievements:</h4>
+                <ul className="space-y-2">
+                  {product.achievements.map((achievement, idx) => (
+                    <li key={idx} className="text-muted-foreground flex items-start">
+                      <span className="text-accent mr-2 mt-1">•</span>
+                      <span>{achievement}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              
+              <div className="flex flex-wrap gap-2">
+                {product.tags.map((tag, tagIndex) => (
+                  <Badge 
+                    key={tagIndex}
+                    variant="secondary"
+                    className="bg-accent/10 text-accent hover:bg-accent/20"
+                  >
+                    {tag}
+                  </Badge>
+                ))}
               </div>
             </Card>
           ))}
