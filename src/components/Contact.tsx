@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Mail, Linkedin, MapPin, Phone } from "lucide-react";
+import { Mail, Linkedin, Github, Phone } from "lucide-react";
 
 const contactInfo = [
   {
@@ -24,11 +24,11 @@ const contactInfo = [
     color: "hover:text-blue-500"
   },
   {
-    icon: MapPin,
-    label: "Location",
-    value: "Noida, India",
-    href: "#",
-    color: "hover:text-red-500"
+    icon: Github,
+    label: "GitHub",
+    value: "View GitHub Profile",
+    href: "https://github.com/predatorzack",
+    color: "hover:text-gray-400"
   }
 ];
 
@@ -52,7 +52,7 @@ const Contact = () => {
                 href={contact.href}
                 target={contact.href.startsWith('http') ? '_blank' : undefined}
                 rel={contact.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                className={`group flex flex-col items-center gap-3 p-6 rounded-lg bg-card border border-border hover:border-accent transition-all duration-300 hover:scale-105 animate-fade-in ${contact.href === '#' ? 'pointer-events-none' : ''}`}
+                className="group flex flex-col items-center gap-3 p-6 rounded-lg bg-card border border-border hover:border-accent transition-all duration-300 hover:scale-105 animate-fade-in"
                 style={{ animationDelay: `${index * 100}ms`, animationFillMode: 'forwards', opacity: 0 }}
                 aria-label={contact.label}
               >
