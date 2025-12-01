@@ -5,9 +5,7 @@ import ProductCarousel from "@/components/ProductCarousel";
 import heyalpha1 from "@/assets/heyalpha-healthcare.png";
 import heyalpha2 from "@/assets/heyalpha-hospitality.png";
 import heyalpha3 from "@/assets/heyalpha-platform.png";
-import bifrost1 from "@/assets/bifrost-1.png";
-import bifrost2 from "@/assets/bifrost-2.png";
-import bifrost3 from "@/assets/bifrost-3.png";
+import bifrostPlatform from "@/assets/bifrost-platform.png";
 import electricpe1 from "@/assets/electricpe-1.png";
 import electricpe2 from "@/assets/electricpe-2.png";
 import electricpe3 from "@/assets/electricpe-3.png";
@@ -61,7 +59,7 @@ const products = [
     ],
     tags: ["B2B SaaS", "FnB Tech", "Enterprise Sales", "Order Management"],
     color: "from-orange-500/5 to-red-500/5",
-    screenshots: [bifrost1, bifrost2, bifrost3]
+    screenshots: [bifrostPlatform]
   },
   {
     company: "ElectricPe",
