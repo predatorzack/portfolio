@@ -119,6 +119,42 @@ const Products = () => {
                       {product.title}
                     </h3>
                   </div>
+
+                  {index === 0 && (
+                    <div className="mb-4 p-4 bg-background/50 rounded-lg">
+                      <h4 className="font-semibold text-foreground mb-3">Explore HeyAlpha Products:</h4>
+                      <div className="flex flex-wrap gap-3">
+                        <a 
+                          href="https://apollo.alphadroid.app/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 px-4 py-2 bg-accent/10 text-accent hover:bg-accent/20 rounded-md transition-colors font-medium"
+                        >
+                          Healthcare
+                          <ExternalLink className="w-4 h-4" />
+                        </a>
+                        <a 
+                          href="https://heyalpha.alphadroid.dev/quicklink/guest-login?db=VM_aliste_78589&room_number=201"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 px-4 py-2 bg-accent/10 text-accent hover:bg-accent/20 rounded-md transition-colors font-medium"
+                        >
+                          Hospitality
+                          <ExternalLink className="w-4 h-4" />
+                        </a>
+                        <a 
+                          href="https://query.alphadroid.dev/alpha"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 px-4 py-2 bg-accent/10 text-accent hover:bg-accent/20 rounded-md transition-colors font-medium"
+                        >
+                          About HeyAlpha
+                          <ExternalLink className="w-4 h-4" />
+                        </a>
+                      </div>
+                    </div>
+                  )}
+
                   <a 
                     href={product.companyUrl}
                     target="_blank"
@@ -160,41 +196,6 @@ const Products = () => {
                 </ul>
               </div>
 
-              {index === 0 && (
-                <div className="mb-6 p-4 bg-background/50 rounded-lg">
-                  <h4 className="font-semibold text-foreground mb-4">Explore HeyAlpha Products:</h4>
-                  <div className="flex flex-wrap gap-3">
-                    <a 
-                      href="https://apollo.alphadroid.app/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-accent/10 text-accent hover:bg-accent/20 rounded-md transition-colors font-medium"
-                    >
-                      Apollo
-                      <ExternalLink className="w-4 h-4" />
-                    </a>
-                    <a 
-                      href="https://heyalpha.alphadroid.dev/quicklink/guest-login?db=VM_aliste_78589&room_number=201"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-accent/10 text-accent hover:bg-accent/20 rounded-md transition-colors font-medium"
-                    >
-                      Hospitality
-                      <ExternalLink className="w-4 h-4" />
-                    </a>
-                    <a 
-                      href="https://query.alphadroid.dev/alpha"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-accent/10 text-accent hover:bg-accent/20 rounded-md transition-colors font-medium"
-                    >
-                      About HeyAlpha
-                      <ExternalLink className="w-4 h-4" />
-                    </a>
-                  </div>
-                </div>
-              )}
-              
               <div className="flex flex-wrap gap-2">
                 {product.tags.map((tag, tagIndex) => (
                   <Badge 
