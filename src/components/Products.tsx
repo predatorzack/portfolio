@@ -1,9 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { TrendingUp, Users, Zap, ExternalLink } from "lucide-react";
-import useEmblaCarousel from "embla-carousel-react";
-import Autoplay from "embla-carousel-autoplay";
-import { useEffect, useCallback } from "react";
 
 const products = [
   {
@@ -26,12 +23,7 @@ const products = [
       { icon: Zap, label: "30+", sublabel: "Enterprise Deployments" }
     ],
     tags: ["AI/ML", "Multi-Agent Systems", "B2B SaaS", "Healthcare", "Hospitality"],
-    color: "from-purple-500/5 to-pink-500/5",
-    visuals: [
-      "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&h=600&fit=crop"
-    ]
+    color: "from-purple-500/5 to-pink-500/5"
   },
   {
     company: "DotPe",
@@ -54,12 +46,7 @@ const products = [
       { icon: Zap, label: "20%", sublabel: "Turnaround Reduction" }
     ],
     tags: ["B2B SaaS", "FnB Tech", "Enterprise Sales", "Order Management"],
-    color: "from-orange-500/5 to-red-500/5",
-    visuals: [
-      "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?w=800&h=600&fit=crop"
-    ]
+    color: "from-orange-500/5 to-red-500/5"
   },
   {
     company: "ElectricPe",
@@ -81,12 +68,7 @@ const products = [
       { icon: Zap, label: "Web", sublabel: "SEO & Conversion" }
     ],
     tags: ["B2C", "User Retention", "Gamification", "UX Design"],
-    color: "from-green-500/5 to-emerald-500/5",
-    visuals: [
-      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1551434678-e076c223a692?w=800&h=600&fit=crop"
-    ]
+    color: "from-green-500/5 to-emerald-500/5"
   },
   {
     company: "Spinny",
@@ -108,110 +90,9 @@ const products = [
       { icon: Zap, label: "15%", sublabel: "Cost Savings" }
     ],
     tags: ["Internal Tools", "Operations", "Automation", "Analytics"],
-    color: "from-blue-500/5 to-cyan-500/5",
-    visuals: [
-      "https://images.unsplash.com/photo-1485291571150-772bcfc10da5?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&h=600&fit=crop"
-    ]
+    color: "from-blue-500/5 to-cyan-500/5"
   }
 ];
-
-const ProductCard = ({ product, index }: { product: typeof products[0], index: number }) => {
-  const [emblaRef] = useEmblaCarousel(
-    { loop: true, dragFree: false },
-    [Autoplay({ delay: 3000, stopOnInteraction: false })]
-  );
-
-  return (
-    <Card 
-      className={`overflow-hidden border-border hover:border-accent transition-all duration-300 bg-gradient-to-br ${product.color} animate-fade-in-up`}
-      style={{ animationDelay: `${index * 150}ms`, animationFillMode: 'forwards', opacity: 0 }}
-    >
-      <div className="grid md:grid-cols-2 gap-0">
-        {/* Left Section - Details */}
-        <div className="p-8">
-          <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-4">
-            <div>
-              <div className="flex items-center gap-3 mb-2">
-                <h3 className="font-['Space_Grotesk'] text-2xl font-bold text-foreground">
-                  {product.title}
-                </h3>
-              </div>
-              <a 
-                href={product.companyUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-accent hover:text-accent/80 font-medium inline-flex items-center gap-2 transition-colors group"
-              >
-                {product.company}
-                <ExternalLink className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-              </a>
-              <p className="text-sm text-muted-foreground">{product.role} • {product.period}</p>
-            </div>
-          </div>
-          
-          <p className="text-foreground mb-6">
-            {product.description}
-          </p>
-
-          <div className="grid grid-cols-1 gap-4 mb-6 p-4 bg-background/50 rounded-lg">
-            {product.metrics.map((metric, idx) => (
-              <div key={idx} className="flex items-center gap-3">
-                <metric.icon className="w-8 h-8 text-accent flex-shrink-0" />
-                <div>
-                  <p className="font-bold text-foreground text-lg">{metric.label}</p>
-                  <p className="text-xs text-muted-foreground">{metric.sublabel}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-          
-          <div className="mb-6">
-            <h4 className="font-semibold text-foreground mb-3">Key Achievements:</h4>
-            <ul className="space-y-2">
-              {product.achievements.map((achievement, idx) => (
-                <li key={idx} className="text-muted-foreground flex items-start">
-                  <span className="text-accent mr-2 mt-1">•</span>
-                  <span>{achievement}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-          
-          <div className="flex flex-wrap gap-2">
-            {product.tags.map((tag, tagIndex) => (
-              <Badge 
-                key={tagIndex}
-                variant="secondary"
-                className="bg-accent/10 text-accent hover:bg-accent/20"
-              >
-                {tag}
-              </Badge>
-            ))}
-          </div>
-        </div>
-
-        {/* Right Section - Visuals Carousel */}
-        <div className="relative bg-background/30 flex items-center justify-center p-8">
-          <div className="w-full overflow-hidden rounded-lg" ref={emblaRef}>
-            <div className="flex">
-              {product.visuals.map((visual, idx) => (
-                <div key={idx} className="flex-[0_0_100%] min-w-0">
-                  <img 
-                    src={visual} 
-                    alt={`${product.title} showcase ${idx + 1}`}
-                    className="w-full h-[400px] object-cover rounded-lg shadow-lg"
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    </Card>
-  );
-};
 
 const Products = () => {
   return (
@@ -224,9 +105,73 @@ const Products = () => {
           End-to-end product leadership across AI platforms, B2B SaaS, and consumer applications
         </p>
         
-        <div className="space-y-8 max-w-7xl mx-auto">
+        <div className="space-y-8 max-w-5xl mx-auto">
           {products.map((product, index) => (
-            <ProductCard key={index} product={product} index={index} />
+            <Card 
+              key={index}
+              className={`p-8 border-border hover:border-accent transition-all duration-300 bg-gradient-to-br ${product.color} animate-fade-in-up`}
+              style={{ animationDelay: `${index * 150}ms`, animationFillMode: 'forwards', opacity: 0 }}
+            >
+              <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-4">
+                <div>
+                  <div className="flex items-center gap-3 mb-2">
+                    <h3 className="font-['Space_Grotesk'] text-2xl font-bold text-foreground">
+                      {product.title}
+                    </h3>
+                  </div>
+                  <a 
+                    href={product.companyUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-accent hover:text-accent/80 font-medium inline-flex items-center gap-2 transition-colors group"
+                  >
+                    {product.company}
+                    <ExternalLink className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                  </a>
+                  <p className="text-sm text-muted-foreground">{product.role} • {product.period}</p>
+                </div>
+              </div>
+              
+              <p className="text-foreground mb-6">
+                {product.description}
+              </p>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 p-4 bg-background/50 rounded-lg">
+                {product.metrics.map((metric, idx) => (
+                  <div key={idx} className="flex items-center gap-3">
+                    <metric.icon className="w-8 h-8 text-accent flex-shrink-0" />
+                    <div>
+                      <p className="font-bold text-foreground text-lg">{metric.label}</p>
+                      <p className="text-xs text-muted-foreground">{metric.sublabel}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              
+              <div className="mb-6">
+                <h4 className="font-semibold text-foreground mb-3">Key Achievements:</h4>
+                <ul className="space-y-2">
+                  {product.achievements.map((achievement, idx) => (
+                    <li key={idx} className="text-muted-foreground flex items-start">
+                      <span className="text-accent mr-2 mt-1">•</span>
+                      <span>{achievement}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              
+              <div className="flex flex-wrap gap-2">
+                {product.tags.map((tag, tagIndex) => (
+                  <Badge 
+                    key={tagIndex}
+                    variant="secondary"
+                    className="bg-accent/10 text-accent hover:bg-accent/20"
+                  >
+                    {tag}
+                  </Badge>
+                ))}
+              </div>
+            </Card>
           ))}
         </div>
       </div>
