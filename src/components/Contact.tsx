@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Mail, Linkedin, Github, Phone } from "lucide-react";
+import { Mail, Linkedin, Github, Phone, Download } from "lucide-react";
 const contactInfo = [{
   icon: Phone,
   label: "Phone",
@@ -56,6 +56,7 @@ const Contact = () => {
               Send Me an Email
             </Button>
             <Button size="lg" variant="outline" className="border-border text-foreground hover:bg-muted font-medium text-lg px-8" onClick={() => window.open('/Sohit_Kumar_Resume.pdf', '_blank')}>
+              <Download className="w-5 h-5" />
               Resume
             </Button>
           </div>
