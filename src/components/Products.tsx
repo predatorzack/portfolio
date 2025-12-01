@@ -1,6 +1,19 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { TrendingUp, Users, Zap, ExternalLink } from "lucide-react";
+import ProductCarousel from "@/components/ProductCarousel";
+import heyalpha1 from "@/assets/heyalpha-1.png";
+import heyalpha2 from "@/assets/heyalpha-2.png";
+import heyalpha3 from "@/assets/heyalpha-3.png";
+import bifrost1 from "@/assets/bifrost-1.png";
+import bifrost2 from "@/assets/bifrost-2.png";
+import bifrost3 from "@/assets/bifrost-3.png";
+import electricpe1 from "@/assets/electricpe-1.png";
+import electricpe2 from "@/assets/electricpe-2.png";
+import electricpe3 from "@/assets/electricpe-3.png";
+import spinny1 from "@/assets/spinny-1.png";
+import spinny2 from "@/assets/spinny-2.png";
+import spinny3 from "@/assets/spinny-3.png";
 
 const products = [
   {
@@ -23,7 +36,8 @@ const products = [
       { icon: Zap, label: "30+", sublabel: "Enterprise Deployments" }
     ],
     tags: ["AI/ML", "Multi-Agent Systems", "B2B SaaS", "Healthcare", "Hospitality"],
-    color: "from-purple-500/5 to-pink-500/5"
+    color: "from-purple-500/5 to-pink-500/5",
+    screenshots: [heyalpha1, heyalpha2, heyalpha3]
   },
   {
     company: "DotPe",
@@ -46,7 +60,8 @@ const products = [
       { icon: Zap, label: "20%", sublabel: "Turnaround Reduction" }
     ],
     tags: ["B2B SaaS", "FnB Tech", "Enterprise Sales", "Order Management"],
-    color: "from-orange-500/5 to-red-500/5"
+    color: "from-orange-500/5 to-red-500/5",
+    screenshots: [bifrost1, bifrost2, bifrost3]
   },
   {
     company: "ElectricPe",
@@ -68,7 +83,8 @@ const products = [
       { icon: Zap, label: "Web", sublabel: "SEO & Conversion" }
     ],
     tags: ["B2C", "User Retention", "Gamification", "UX Design"],
-    color: "from-green-500/5 to-emerald-500/5"
+    color: "from-green-500/5 to-emerald-500/5",
+    screenshots: [electricpe1, electricpe2, electricpe3]
   },
   {
     company: "Spinny",
@@ -90,7 +106,8 @@ const products = [
       { icon: Zap, label: "15%", sublabel: "Cost Savings" }
     ],
     tags: ["Internal Tools", "Operations", "Automation", "Analytics"],
-    color: "from-blue-500/5 to-cyan-500/5"
+    color: "from-blue-500/5 to-cyan-500/5",
+    screenshots: [spinny1, spinny2, spinny3]
   }
 ];
 
@@ -178,10 +195,7 @@ const Products = () => {
 
                 {/* Right Section - Visuals */}
                 <div className="flex items-center justify-center bg-background/30 rounded-lg p-6 min-h-[400px]">
-                  <div className="text-center text-muted-foreground">
-                    <p className="text-sm">Product capabilities visualization</p>
-                    <p className="text-xs mt-2">Screenshots, demos, or visual elements here</p>
-                  </div>
+                  <ProductCarousel images={product.screenshots} />
                 </div>
               </div>
             </Card>
