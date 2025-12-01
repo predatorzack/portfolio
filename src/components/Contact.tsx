@@ -54,11 +54,11 @@ const Contact = () => {
           <div className="flex flex-wrap gap-4 justify-center">
             <Button size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90 font-medium text-lg px-8 animate-glow" onClick={() => window.location.href = 'mailto:sohitkumar944@gmail.com'}>
               <Mail className="w-5 h-5" />
-              Send Me an Email
+              Send me an Email
             </Button>
             <Button size="lg" variant="outline" className="border-border text-foreground hover:bg-muted font-medium text-lg px-8" onClick={() => window.open('/Sohit_Kumar_Resume.pdf', '_blank')}>
               <Download className="w-5 h-5" />
-              Resume
+              Download Resume
             </Button>
           </div>
         </div>
