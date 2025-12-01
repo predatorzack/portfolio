@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ArrowDown } from "lucide-react";
+import { ArrowDown, Download } from "lucide-react";
 
 const Hero = () => {
   const scrollToSection = (id: string) => {
@@ -13,27 +13,27 @@ const Hero = () => {
       <div className="container mx-auto px-6 z-10">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="font-['Space_Grotesk'] text-5xl md:text-7xl lg:text-8xl font-bold text-primary-foreground mb-6 animate-fade-in-up">
-            Hello, I'm{" "}
+            Hi, I'm{" "}
             <span className="bg-gradient-to-r from-accent to-accent-glow bg-clip-text text-transparent">
-              Alex Rivera
+              Sohit Kumar
             </span>
           </h1>
           
           <p className="text-xl md:text-2xl text-primary-foreground/80 mb-8 animate-fade-in-up [animation-delay:200ms] opacity-0 [animation-fill-mode:forwards]">
-            Creative Developer & Designer
+            Senior Product Manager
           </p>
           
           <p className="text-lg text-primary-foreground/60 max-w-2xl mx-auto mb-12 animate-fade-in-up [animation-delay:400ms] opacity-0 [animation-fill-mode:forwards]">
-            Crafting beautiful, functional digital experiences with a focus on innovation and user-centric design
+            5+ years leading cross-functional teams to build and scale AI-driven and B2B SaaS products. From ideation to GTM revenue, optimizing user experiences across large-scale systems.
           </p>
           
           <div className="flex flex-wrap gap-4 justify-center animate-fade-in-up [animation-delay:600ms] opacity-0 [animation-fill-mode:forwards]">
             <Button 
               size="lg"
               className="bg-accent text-accent-foreground hover:bg-accent/90 font-medium text-lg px-8 animate-glow"
-              onClick={() => scrollToSection("projects")}
+              onClick={() => scrollToSection("products")}
             >
-              View My Work
+              View Case Studies
             </Button>
             <Button 
               size="lg"
@@ -42,6 +42,15 @@ const Hero = () => {
               onClick={() => scrollToSection("contact")}
             >
               Get In Touch
+            </Button>
+            <Button 
+              size="lg"
+              variant="outline"
+              className="border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/10 font-medium text-lg px-8 gap-2"
+              onClick={() => window.open('/Sohit_Kumar_Resume.pdf', '_blank')}
+            >
+              <Download size={20} />
+              Resume
             </Button>
           </div>
         </div>
