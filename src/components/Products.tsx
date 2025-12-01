@@ -1,6 +1,10 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { TrendingUp, Users, Zap, ExternalLink } from "lucide-react";
+import heyalphaImg from "@/assets/product-heyalpha.jpg";
+import bifrostImg from "@/assets/product-bifrost.jpg";
+import electricpeImg from "@/assets/product-electricpe.jpg";
+import spinnyImg from "@/assets/product-spinny.jpg";
 
 const products = [
   {
@@ -23,7 +27,8 @@ const products = [
       { icon: Zap, label: "30+", sublabel: "Enterprise Deployments" }
     ],
     tags: ["AI/ML", "Multi-Agent Systems", "B2B SaaS", "Healthcare", "Hospitality"],
-    color: "from-purple-500/5 to-pink-500/5"
+    color: "from-purple-500/5 to-pink-500/5",
+    image: heyalphaImg
   },
   {
     company: "DotPe",
@@ -46,7 +51,8 @@ const products = [
       { icon: Zap, label: "20%", sublabel: "Turnaround Reduction" }
     ],
     tags: ["B2B SaaS", "FnB Tech", "Enterprise Sales", "Order Management"],
-    color: "from-orange-500/5 to-red-500/5"
+    color: "from-orange-500/5 to-red-500/5",
+    image: bifrostImg
   },
   {
     company: "ElectricPe",
@@ -68,7 +74,8 @@ const products = [
       { icon: Zap, label: "Web", sublabel: "SEO & Conversion" }
     ],
     tags: ["B2C", "User Retention", "Gamification", "UX Design"],
-    color: "from-green-500/5 to-emerald-500/5"
+    color: "from-green-500/5 to-emerald-500/5",
+    image: electricpeImg
   },
   {
     company: "Spinny",
@@ -90,7 +97,8 @@ const products = [
       { icon: Zap, label: "15%", sublabel: "Cost Savings" }
     ],
     tags: ["Internal Tools", "Operations", "Automation", "Analytics"],
-    color: "from-blue-500/5 to-cyan-500/5"
+    color: "from-blue-500/5 to-cyan-500/5",
+    image: spinnyImg
   }
 ];
 
@@ -109,67 +117,79 @@ const Products = () => {
           {products.map((product, index) => (
             <Card 
               key={index}
-              className={`p-8 border-border hover:border-accent transition-all duration-300 bg-gradient-to-br ${product.color} animate-fade-in-up`}
+              className={`overflow-hidden border-border hover:border-accent transition-all duration-300 bg-gradient-to-br ${product.color} animate-fade-in-up`}
               style={{ animationDelay: `${index * 150}ms`, animationFillMode: 'forwards', opacity: 0 }}
             >
-              <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-4">
-                <div>
-                  <div className="flex items-center gap-3 mb-2">
-                    <h3 className="font-['Space_Grotesk'] text-2xl font-bold text-foreground">
-                      {product.title}
-                    </h3>
-                  </div>
-                  <a 
-                    href={product.companyUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-accent hover:text-accent/80 font-medium inline-flex items-center gap-2 transition-colors group"
-                  >
-                    {product.company}
-                    <ExternalLink className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                  </a>
-                  <p className="text-sm text-muted-foreground">{product.role} • {product.period}</p>
-                </div>
-              </div>
-              
-              <p className="text-foreground mb-6">
-                {product.description}
-              </p>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 p-4 bg-background/50 rounded-lg">
-                {product.metrics.map((metric, idx) => (
-                  <div key={idx} className="flex items-center gap-3">
-                    <metric.icon className="w-8 h-8 text-accent flex-shrink-0" />
-                    <div>
-                      <p className="font-bold text-foreground text-lg">{metric.label}</p>
-                      <p className="text-xs text-muted-foreground">{metric.sublabel}</p>
+              <div className="grid md:grid-cols-2 gap-8">
+                {/* Left Section - Content */}
+                <div className="p-8">
+                  <div className="flex flex-col mb-4">
+                    <div className="flex items-center gap-3 mb-2">
+                      <h3 className="font-['Space_Grotesk'] text-2xl font-bold text-foreground">
+                        {product.title}
+                      </h3>
                     </div>
+                    <a 
+                      href={product.companyUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-accent hover:text-accent/80 font-medium inline-flex items-center gap-2 transition-colors group"
+                    >
+                      {product.company}
+                      <ExternalLink className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                    </a>
+                    <p className="text-sm text-muted-foreground">{product.role} • {product.period}</p>
                   </div>
-                ))}
-              </div>
-              
-              <div className="mb-6">
-                <h4 className="font-semibold text-foreground mb-3">Key Achievements:</h4>
-                <ul className="space-y-2">
-                  {product.achievements.map((achievement, idx) => (
-                    <li key={idx} className="text-muted-foreground flex items-start">
-                      <span className="text-accent mr-2 mt-1">•</span>
-                      <span>{achievement}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              
-              <div className="flex flex-wrap gap-2">
-                {product.tags.map((tag, tagIndex) => (
-                  <Badge 
-                    key={tagIndex}
-                    variant="secondary"
-                    className="bg-accent/10 text-accent hover:bg-accent/20"
-                  >
-                    {tag}
-                  </Badge>
-                ))}
+                  
+                  <p className="text-foreground mb-6">
+                    {product.description}
+                  </p>
+
+                  <div className="grid grid-cols-1 gap-4 mb-6 p-4 bg-background/50 rounded-lg">
+                    {product.metrics.map((metric, idx) => (
+                      <div key={idx} className="flex items-center gap-3">
+                        <metric.icon className="w-8 h-8 text-accent flex-shrink-0" />
+                        <div>
+                          <p className="font-bold text-foreground text-lg">{metric.label}</p>
+                          <p className="text-xs text-muted-foreground">{metric.sublabel}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  <div className="mb-6">
+                    <h4 className="font-semibold text-foreground mb-3">Key Achievements:</h4>
+                    <ul className="space-y-2">
+                      {product.achievements.map((achievement, idx) => (
+                        <li key={idx} className="text-muted-foreground flex items-start">
+                          <span className="text-accent mr-2 mt-1">•</span>
+                          <span>{achievement}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  
+                  <div className="flex flex-wrap gap-2">
+                    {product.tags.map((tag, tagIndex) => (
+                      <Badge 
+                        key={tagIndex}
+                        variant="secondary"
+                        className="bg-accent/10 text-accent hover:bg-accent/20"
+                      >
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Right Section - Visual */}
+                <div className="relative h-full min-h-[400px] md:min-h-0">
+                  <img 
+                    src={product.image} 
+                    alt={`${product.title} illustration`}
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                </div>
               </div>
             </Card>
           ))}
