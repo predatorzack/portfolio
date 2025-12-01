@@ -38,7 +38,7 @@ const Hero = () => {
             <Button 
               size="lg"
               variant="outline"
-              className="border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/10 font-medium text-lg px-8"
+              className="border-accent/50 text-accent hover:bg-accent/10 hover:border-accent font-medium text-lg px-8"
               onClick={() => scrollToSection("contact")}
             >
               Get In Touch
@@ -46,7 +46,7 @@ const Hero = () => {
             <Button 
               size="lg"
               variant="outline"
-              className="border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/10 font-medium text-lg px-8 gap-2"
+              className="border-accent/50 text-accent hover:bg-accent/10 hover:border-accent font-medium text-lg px-8 gap-2"
               onClick={() => window.open('/Sohit_Kumar_Resume.pdf', '_blank')}
             >
               <Download size={20} />
