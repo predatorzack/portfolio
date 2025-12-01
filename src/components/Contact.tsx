@@ -20,7 +20,7 @@ const contactInfo = [
     icon: Linkedin,
     label: "LinkedIn",
     value: "Connect on LinkedIn",
-    href: "https://linkedin.com/in/sohitkumar944",
+    href: "https://www.linkedin.com/in/sohitkumar/",
     color: "hover:text-blue-500"
   },
   {
