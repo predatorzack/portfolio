@@ -122,7 +122,6 @@ const Products = () => {
 
                   {index === 0 && (
                     <div className="mb-4 p-4 bg-background/50 rounded-lg">
-                      <h4 className="font-semibold text-foreground mb-3">Explore HeyAlpha Products:</h4>
                       <div className="flex flex-wrap gap-3">
                         <a 
                           href="https://apollo.alphadroid.app/"
