@@ -39,8 +39,8 @@ All colors MUST be HSL.
     --radius: 0.75rem;
 
     /* Custom portfolio colors */
-    --hero-gradient-from: 220 25% 92%;
-    --hero-gradient-to: 220 20% 96%;
+    --hero-gradient-from: 173 80% 40%;
+    --hero-gradient-to: 173 75% 50%;
     --accent-glow: 188 94% 55%;
     --section-bg: 220 17% 97%;
   }
@@ -74,8 +74,8 @@ All colors MUST be HSL.
     --input: 220 30% 18%;
     --ring: 188 94% 55%;
 
-    --hero-gradient-from: 220 30% 16%;
-    --hero-gradient-to: 220 25% 20%;
+    --hero-gradient-from: 173 80% 25%;
+    --hero-gradient-to: 173 75% 35%;
     --accent-glow: 188 94% 55%;
     --section-bg: 220 40% 10%;
   }
