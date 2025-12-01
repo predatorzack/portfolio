@@ -16,7 +16,7 @@ const Hero = () => {
             <img 
               src={profileImage} 
               alt="Sohit Kumar" 
-              className="w-32 h-32 md:w-40 md:h-40 rounded-full mx-auto object-cover border-4 border-accent shadow-[0_0_40px_rgba(6,182,212,0.3)]"
+              className="w-40 h-40 md:w-48 md:h-48 rounded-full mx-auto object-cover border-4 border-accent shadow-[0_0_40px_rgba(6,182,212,0.3)]"
             />
           </div>
           <h1 className="font-['Space_Grotesk'] text-5xl md:text-7xl lg:text-8xl font-bold text-primary-foreground mb-6 animate-fade-in-up [animation-delay:200ms] opacity-0 [animation-fill-mode:forwards]">
