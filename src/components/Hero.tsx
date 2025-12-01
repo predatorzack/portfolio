@@ -20,7 +20,7 @@ const Hero = () => {
           </h1>
           
           <p className="text-xl md:text-2xl text-primary-foreground/80 mb-8 animate-fade-in-up [animation-delay:200ms] opacity-0 [animation-fill-mode:forwards]">
-            Senior Product Manager
+            Product Manager
           </p>
           
           <p className="text-lg text-primary-foreground/60 max-w-2xl mx-auto mb-12 animate-fade-in-up [animation-delay:400ms] opacity-0 [animation-fill-mode:forwards]">
