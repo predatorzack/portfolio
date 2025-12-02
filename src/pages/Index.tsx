@@ -4,6 +4,7 @@ import Skills from "@/components/Skills";
 import Products from "@/components/Products";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
+import Chatbot from "@/components/Chatbot";
 
 const Index = () => {
   return (
@@ -14,6 +15,7 @@ const Index = () => {
       <Products />
       <Contact />
       <Footer />
+      <Chatbot />
     </div>
   );
 };
