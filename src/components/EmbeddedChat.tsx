@@ -38,7 +38,7 @@ const VOICE_OPTIONS = [{
 const EmbeddedChat = () => {
   const [messages, setMessages] = useState<Message[]>([{
     role: "assistant",
-    content: "Hi! I'm Sohit's AI assistant. Ask me anything about his experience, skills, or background!"
+    content: "Hey! I'm Sohit. Feel free to ask me anything about my experience, skills, or background!"
   }]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
