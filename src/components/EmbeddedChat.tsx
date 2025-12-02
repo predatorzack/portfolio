@@ -3,33 +3,36 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Send, Bot, User, Mic, MicOff, Loader2, Volume2, VolumeX, ChevronDown, Square } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import AudioWaveform from "./AudioWaveform";
 import { useToast } from "@/hooks/use-toast";
-
 type Message = {
   role: "user" | "assistant";
   content: string;
 };
-
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/portfolio-chat`;
 const TRANSCRIBE_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/voice-transcribe`;
 const TTS_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/text-to-speech`;
 const QUICK_REPLIES = ["What's your experience?", "Tell me about your expertise", "What is HeyAlpha?"];
-const VOICE_OPTIONS = [
-  { id: 'alloy', label: 'Alloy' },
-  { id: 'echo', label: 'Echo' },
-  { id: 'fable', label: 'Fable' },
-  { id: 'nova', label: 'Nova' },
-  { id: 'onyx', label: 'Onyx' },
-  { id: 'shimmer', label: 'Shimmer' },
-];
-
+const VOICE_OPTIONS = [{
+  id: 'alloy',
+  label: 'Alloy'
+}, {
+  id: 'echo',
+  label: 'Echo'
+}, {
+  id: 'fable',
+  label: 'Fable'
+}, {
+  id: 'nova',
+  label: 'Nova'
+}, {
+  id: 'onyx',
+  label: 'Onyx'
+}, {
+  id: 'shimmer',
+  label: 'Shimmer'
+}];
 const EmbeddedChat = () => {
   const [messages, setMessages] = useState<Message[]>([{
     role: "assistant",
@@ -47,29 +50,31 @@ const EmbeddedChat = () => {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const { toast } = useToast();
-
+  const {
+    toast
+  } = useToast();
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    messagesEndRef.current?.scrollIntoView({
+      behavior: "smooth"
+    });
   };
-
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
-
   const handleQuickReply = (question: string) => {
     setShowSuggestions(false);
     sendMessageWithText(question);
   };
-
   const sendMessageWithText = async (text: string) => {
     if (!text.trim() || isLoading) return;
-    const userMessage: Message = { role: "user", content: text.trim() };
+    const userMessage: Message = {
+      role: "user",
+      content: text.trim()
+    };
     setMessages(prev => [...prev, userMessage]);
     setInput("");
     setIsLoading(true);
     let assistantContent = "";
-
     try {
       const response = await fetch(CHAT_URL, {
         method: "POST",
@@ -77,21 +82,24 @@ const EmbeddedChat = () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`
         },
-        body: JSON.stringify({ messages: [...messages, userMessage].slice(1) })
+        body: JSON.stringify({
+          messages: [...messages, userMessage].slice(1)
+        })
       });
-
       if (!response.ok || !response.body) throw new Error("Failed to get response");
-
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
       let buffer = "";
-
       while (true) {
-        const { done, value } = await reader.read();
+        const {
+          done,
+          value
+        } = await reader.read();
         if (done) break;
-        buffer += decoder.decode(value, { stream: true });
+        buffer += decoder.decode(value, {
+          stream: true
+        });
         let newlineIndex: number;
-
         while ((newlineIndex = buffer.indexOf("\n")) !== -1) {
           let line = buffer.slice(0, newlineIndex);
           buffer = buffer.slice(newlineIndex + 1);
@@ -100,7 +108,6 @@ const EmbeddedChat = () => {
           if (!line.startsWith("data: ")) continue;
           const jsonStr = line.slice(6).trim();
           if (jsonStr === "[DONE]") break;
-
           try {
             const parsed = JSON.parse(jsonStr);
             const content = parsed.choices?.[0]?.delta?.content;
@@ -109,9 +116,15 @@ const EmbeddedChat = () => {
               setMessages(prev => {
                 const last = prev[prev.length - 1];
                 if (last?.role === "assistant" && prev.length > 1 && prev[prev.length - 2]?.role === "user") {
-                  return prev.map((m, i) => i === prev.length - 1 ? { ...m, content: assistantContent } : m);
+                  return prev.map((m, i) => i === prev.length - 1 ? {
+                    ...m,
+                    content: assistantContent
+                  } : m);
                 }
-                return [...prev, { role: "assistant", content: assistantContent }];
+                return [...prev, {
+                  role: "assistant",
+                  content: assistantContent
+                }];
               });
             }
           } catch {
@@ -120,25 +133,26 @@ const EmbeddedChat = () => {
           }
         }
       }
-
       if (assistantContent && ttsEnabled) {
         speakText(assistantContent);
       }
     } catch (error) {
       console.error("Chat error:", error);
-      toast({ title: "Error", description: "Failed to send message.", variant: "destructive" });
+      toast({
+        title: "Error",
+        description: "Failed to send message.",
+        variant: "destructive"
+      });
     } finally {
       setIsLoading(false);
     }
   };
-
   const speakText = async (text: string) => {
     if (!text.trim()) return;
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current = null;
     }
-
     setIsSpeaking(true);
     try {
       const response = await fetch(TTS_URL, {
@@ -147,24 +161,34 @@ const EmbeddedChat = () => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`
         },
-        body: JSON.stringify({ text, voice: selectedVoice })
+        body: JSON.stringify({
+          text,
+          voice: selectedVoice
+        })
       });
-
       if (!response.ok) throw new Error('TTS failed');
-
       const data = await response.json();
       const audio = new Audio(`data:audio/mp3;base64,${data.audioContent}`);
       audioRef.current = audio;
-      audio.onended = () => { setIsSpeaking(false); audioRef.current = null; };
-      audio.onerror = () => { setIsSpeaking(false); audioRef.current = null; };
+      audio.onended = () => {
+        setIsSpeaking(false);
+        audioRef.current = null;
+      };
+      audio.onerror = () => {
+        setIsSpeaking(false);
+        audioRef.current = null;
+      };
       await audio.play();
     } catch (error) {
       console.error('TTS error:', error);
       setIsSpeaking(false);
-      toast({ title: "Speech Error", description: "Failed to generate speech.", variant: "destructive" });
+      toast({
+        title: "Speech Error",
+        description: "Failed to generate speech.",
+        variant: "destructive"
+      });
     }
   };
-
   const stopSpeaking = () => {
     if (audioRef.current) {
       audioRef.current.pause();
@@ -172,40 +196,50 @@ const EmbeddedChat = () => {
       setIsSpeaking(false);
     }
   };
-
   const startRecording = async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } });
-      const mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true
+        }
+      });
+      const mediaRecorder = new MediaRecorder(stream, {
+        mimeType: 'audio/webm'
+      });
       mediaRecorderRef.current = mediaRecorder;
       audioChunksRef.current = [];
-
       mediaRecorder.ondataavailable = event => {
         if (event.data.size > 0) audioChunksRef.current.push(event.data);
       };
-
       mediaRecorder.onstop = async () => {
         stream.getTracks().forEach(track => track.stop());
-        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+        const audioBlob = new Blob(audioChunksRef.current, {
+          type: 'audio/webm'
+        });
         await transcribeAudio(audioBlob);
       };
-
       mediaRecorder.start();
       setIsRecording(true);
-      toast({ title: "Recording", description: "Speak now..." });
+      toast({
+        title: "Recording",
+        description: "Speak now..."
+      });
     } catch (error) {
       console.error("Microphone error:", error);
-      toast({ title: "Microphone Error", description: "Could not access microphone.", variant: "destructive" });
+      toast({
+        title: "Microphone Error",
+        description: "Could not access microphone.",
+        variant: "destructive"
+      });
     }
   };
-
   const stopRecording = () => {
     if (mediaRecorderRef.current && isRecording) {
       mediaRecorderRef.current.stop();
       setIsRecording(false);
     }
   };
-
   const transcribeAudio = async (audioBlob: Blob) => {
     setIsTranscribing(true);
     try {
@@ -219,41 +253,44 @@ const EmbeddedChat = () => {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`
           },
-          body: JSON.stringify({ audio: base64Audio })
+          body: JSON.stringify({
+            audio: base64Audio
+          })
         });
-
         if (!response.ok) throw new Error('Transcription failed');
-
         const data = await response.json();
         if (data.text?.trim()) {
           setShowSuggestions(false);
           sendMessageWithText(data.text);
         } else {
-          toast({ title: "No speech detected", description: "Please try speaking again.", variant: "destructive" });
+          toast({
+            title: "No speech detected",
+            description: "Please try speaking again.",
+            variant: "destructive"
+          });
         }
         setIsTranscribing(false);
       };
     } catch (error) {
       console.error("Transcription error:", error);
-      toast({ title: "Transcription Error", description: "Failed to transcribe audio.", variant: "destructive" });
+      toast({
+        title: "Transcription Error",
+        description: "Failed to transcribe audio.",
+        variant: "destructive"
+      });
       setIsTranscribing(false);
     }
   };
-
   const sendMessage = (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim()) return;
     setShowSuggestions(false);
     sendMessageWithText(input);
   };
-
   const handleMicClick = () => {
-    if (isRecording) stopRecording();
-    else startRecording();
+    if (isRecording) stopRecording();else startRecording();
   };
-
-  return (
-    <Card className="w-full h-[450px] flex flex-col border-accent/30 shadow-xl shadow-accent/10 animate-fade-in">
+  return <Card className="w-full h-[450px] flex flex-col border-accent/30 shadow-xl shadow-accent/10 animate-fade-in">
       {/* Header */}
       <div className="p-3 border-b border-border bg-gradient-to-r from-accent/10 to-accent/5 rounded-t-lg">
         <div className="flex items-center justify-between">
@@ -262,7 +299,7 @@ const EmbeddedChat = () => {
               <Bot className="h-4 w-4 text-accent" />
             </div>
             <div>
-              <h3 className="font-['Space_Grotesk'] font-semibold text-foreground text-sm">Ask AI about me</h3>
+              <h3 className="font-['Space_Grotesk'] font-semibold text-foreground text-sm">Ask Sohit</h3>
             </div>
           </div>
           <div className="flex items-center gap-1">
@@ -274,48 +311,35 @@ const EmbeddedChat = () => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                {VOICE_OPTIONS.map((voice) => (
-                  <DropdownMenuItem key={voice.id} onClick={() => setSelectedVoice(voice.id)} className={selectedVoice === voice.id ? 'bg-accent/20' : ''}>
+                {VOICE_OPTIONS.map(voice => <DropdownMenuItem key={voice.id} onClick={() => setSelectedVoice(voice.id)} className={selectedVoice === voice.id ? 'bg-accent/20' : ''}>
                     {voice.label}
-                  </DropdownMenuItem>
-                ))}
+                  </DropdownMenuItem>)}
               </DropdownMenuContent>
             </DropdownMenu>
-            {isSpeaking ? (
-              <Button variant="ghost" size="sm" onClick={stopSpeaking} className="h-7 px-2 text-destructive hover:text-destructive hover:bg-destructive/10 flex items-center gap-1" title="Stop speaking">
+            {isSpeaking ? <Button variant="ghost" size="sm" onClick={stopSpeaking} className="h-7 px-2 text-destructive hover:text-destructive hover:bg-destructive/10 flex items-center gap-1" title="Stop speaking">
                 <Square size={10} className="fill-current" />
                 <AudioWaveform />
-              </Button>
-            ) : (
-              <Button variant="ghost" size="icon" onClick={() => setTtsEnabled(!ttsEnabled)} className={`h-7 w-7 ${ttsEnabled ? 'text-accent' : 'text-muted-foreground'}`} title={ttsEnabled ? 'Disable voice' : 'Enable voice'}>
+              </Button> : <Button variant="ghost" size="icon" onClick={() => setTtsEnabled(!ttsEnabled)} className={`h-7 w-7 ${ttsEnabled ? 'text-accent' : 'text-muted-foreground'}`} title={ttsEnabled ? 'Disable voice' : 'Enable voice'}>
                 {ttsEnabled ? <Volume2 size={14} /> : <VolumeX size={14} />}
-              </Button>
-            )}
+              </Button>}
           </div>
         </div>
       </div>
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-3 space-y-3">
-        {messages.map((message, index) => (
-          <div key={index} className={`flex gap-2 ${message.role === "user" ? "justify-end" : "justify-start"}`}>
-            {message.role === "assistant" && (
-              <div className="h-6 w-6 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0">
+        {messages.map((message, index) => <div key={index} className={`flex gap-2 ${message.role === "user" ? "justify-end" : "justify-start"}`}>
+            {message.role === "assistant" && <div className="h-6 w-6 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0">
                 <Bot className="h-3 w-3 text-accent" />
-              </div>
-            )}
+              </div>}
             <div className={`max-w-[85%] rounded-2xl px-3 py-2 ${message.role === "user" ? "bg-accent text-accent-foreground rounded-br-md" : "bg-secondary text-secondary-foreground rounded-bl-md"}`}>
               <p className="text-xs whitespace-pre-wrap">{message.content}</p>
             </div>
-            {message.role === "user" && (
-              <div className="h-6 w-6 rounded-full bg-accent flex items-center justify-center flex-shrink-0">
+            {message.role === "user" && <div className="h-6 w-6 rounded-full bg-accent flex items-center justify-center flex-shrink-0">
                 <User className="h-3 w-3 text-accent-foreground" />
-              </div>
-            )}
-          </div>
-        ))}
-        {isLoading && messages[messages.length - 1]?.role === "user" && (
-          <div className="flex gap-2 justify-start">
+              </div>}
+          </div>)}
+        {isLoading && messages[messages.length - 1]?.role === "user" && <div className="flex gap-2 justify-start">
             <div className="h-6 w-6 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0">
               <Bot className="h-3 w-3 text-accent" />
             </div>
@@ -326,21 +350,16 @@ const EmbeddedChat = () => {
                 <span className="h-1.5 w-1.5 bg-muted-foreground rounded-full animate-bounce [animation-delay:300ms]" />
               </div>
             </div>
-          </div>
-        )}
+          </div>}
         <div ref={messagesEndRef} />
       </div>
 
       {/* Quick Replies */}
-      {showSuggestions && !isLoading && (
-        <div className="px-3 pb-2 flex flex-wrap gap-1.5">
-          {QUICK_REPLIES.map((question, index) => (
-            <button key={index} onClick={() => handleQuickReply(question)} className="text-[10px] px-2 py-1 rounded-full border border-accent/30 hover:bg-accent/10 transition-colors text-[#2cacbf]">
+      {showSuggestions && !isLoading && <div className="px-3 pb-2 flex flex-wrap gap-1.5">
+          {QUICK_REPLIES.map((question, index) => <button key={index} onClick={() => handleQuickReply(question)} className="text-[10px] px-2 py-1 rounded-full border border-accent/30 hover:bg-accent/10 transition-colors text-[#2cacbf]">
               {question}
-            </button>
-          ))}
-        </div>
-      )}
+            </button>)}
+        </div>}
 
       {/* Input */}
       <form onSubmit={sendMessage} className="p-3 border-t border-border">
@@ -354,8 +373,6 @@ const EmbeddedChat = () => {
           </Button>
         </div>
       </form>
-    </Card>
-  );
+    </Card>;
 };
-
 export default EmbeddedChat;
