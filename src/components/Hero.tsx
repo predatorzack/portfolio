@@ -8,8 +8,8 @@ const Hero = () => {
     });
   };
   return <section className="min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-hero-gradient-from to-hero-gradient-to">
-      {/* Social Icons - Top Left on mobile (column), Top Right on desktop (row) */}
-      <div className="absolute top-6 left-6 md:left-auto md:right-6 flex flex-col md:flex-row gap-3 z-20">
+      {/* Social Icons - Top Right (column on mobile, row on desktop) */}
+      <div className="absolute top-6 right-6 flex flex-col md:flex-row gap-3 z-20">
         <a 
           href="https://www.linkedin.com/in/sohitkumar/" 
           target="_blank" 
