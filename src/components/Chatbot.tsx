@@ -3,33 +3,37 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { X, Send, Bot, User, Mic, MicOff, Loader2, Volume2, VolumeX, ChevronDown, Square } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import AudioWaveform from "./AudioWaveform";
 import { useToast } from "@/hooks/use-toast";
 import chatbotIcon from "@/assets/chatbot-icon.avif";
-
 type Message = {
   role: "user" | "assistant";
   content: string;
 };
-
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/portfolio-chat`;
 const TRANSCRIBE_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/voice-transcribe`;
 const TTS_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/text-to-speech`;
 const QUICK_REPLIES = ["What's your experience?", "Tell me about your expertise", "What is HeyAlpha?", "Where did you study?"];
-const VOICE_OPTIONS = [
-  { id: 'alloy', label: 'Alloy' },
-  { id: 'echo', label: 'Echo' },
-  { id: 'fable', label: 'Fable' },
-  { id: 'nova', label: 'Nova' },
-  { id: 'onyx', label: 'Onyx' },
-  { id: 'shimmer', label: 'Shimmer' },
-];
+const VOICE_OPTIONS = [{
+  id: 'alloy',
+  label: 'Alloy'
+}, {
+  id: 'echo',
+  label: 'Echo'
+}, {
+  id: 'fable',
+  label: 'Fable'
+}, {
+  id: 'nova',
+  label: 'Nova'
+}, {
+  id: 'onyx',
+  label: 'Onyx'
+}, {
+  id: 'shimmer',
+  label: 'Shimmer'
+}];
 const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([{
@@ -48,7 +52,9 @@ const Chatbot = () => {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const { toast } = useToast();
+  const {
+    toast
+  } = useToast();
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({
       behavior: "smooth"
@@ -146,16 +152,14 @@ const Chatbot = () => {
       setIsLoading(false);
     }
   };
-
   const speakText = async (text: string) => {
     if (!text.trim()) return;
-    
+
     // Stop any current audio
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current = null;
     }
-
     setIsSpeaking(true);
     try {
       const response = await fetch(TTS_URL, {
@@ -164,29 +168,26 @@ const Chatbot = () => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`
         },
-        body: JSON.stringify({ text, voice: selectedVoice })
+        body: JSON.stringify({
+          text,
+          voice: selectedVoice
+        })
       });
-
       if (!response.ok) {
         throw new Error('TTS failed');
       }
-
       const data = await response.json();
       const audioData = `data:audio/mp3;base64,${data.audioContent}`;
-      
       const audio = new Audio(audioData);
       audioRef.current = audio;
-      
       audio.onended = () => {
         setIsSpeaking(false);
         audioRef.current = null;
       };
-      
       audio.onerror = () => {
         setIsSpeaking(false);
         audioRef.current = null;
       };
-
       await audio.play();
     } catch (error) {
       console.error('TTS error:', error);
@@ -198,7 +199,6 @@ const Chatbot = () => {
       });
     }
   };
-
   const stopSpeaking = () => {
     if (audioRef.current) {
       audioRef.current.pause();
@@ -324,57 +324,30 @@ const Chatbot = () => {
                 <Bot className="h-5 w-5 text-accent" />
               </div>
               <div>
-                <h3 className="font-['Space_Grotesk'] font-semibold text-foreground">Chat with AI</h3>
+                <h3 className="font-['Space_Grotesk'] font-semibold text-foreground">Ask Sohit </h3>
                 <p className="text-xs text-muted-foreground">Ask about Sohit's experience</p>
               </div>
             </div>
             <div className="flex items-center gap-1">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-8 px-2 text-xs text-muted-foreground hover:text-foreground"
-                    disabled={!ttsEnabled}
-                  >
+                  <Button variant="ghost" size="sm" className="h-8 px-2 text-xs text-muted-foreground hover:text-foreground" disabled={!ttsEnabled}>
                     {VOICE_OPTIONS.find(v => v.id === selectedVoice)?.label}
                     <ChevronDown size={12} className="ml-1" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  {VOICE_OPTIONS.map((voice) => (
-                    <DropdownMenuItem
-                      key={voice.id}
-                      onClick={() => setSelectedVoice(voice.id)}
-                      className={selectedVoice === voice.id ? 'bg-accent/20' : ''}
-                    >
+                  {VOICE_OPTIONS.map(voice => <DropdownMenuItem key={voice.id} onClick={() => setSelectedVoice(voice.id)} className={selectedVoice === voice.id ? 'bg-accent/20' : ''}>
                       {voice.label}
-                    </DropdownMenuItem>
-                  ))}
+                    </DropdownMenuItem>)}
                 </DropdownMenuContent>
               </DropdownMenu>
-              {isSpeaking ? (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={stopSpeaking}
-                  className="h-8 px-2 text-destructive hover:text-destructive hover:bg-destructive/10 flex items-center gap-1"
-                  title="Stop speaking"
-                >
+              {isSpeaking ? <Button variant="ghost" size="sm" onClick={stopSpeaking} className="h-8 px-2 text-destructive hover:text-destructive hover:bg-destructive/10 flex items-center gap-1" title="Stop speaking">
                   <Square size={12} className="fill-current" />
                   <AudioWaveform />
-                </Button>
-              ) : (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setTtsEnabled(!ttsEnabled)}
-                  className={`h-8 w-8 ${ttsEnabled ? 'text-accent' : 'text-muted-foreground'}`}
-                  title={ttsEnabled ? 'Disable voice responses' : 'Enable voice responses'}
-                >
+                </Button> : <Button variant="ghost" size="icon" onClick={() => setTtsEnabled(!ttsEnabled)} className={`h-8 w-8 ${ttsEnabled ? 'text-accent' : 'text-muted-foreground'}`} title={ttsEnabled ? 'Disable voice responses' : 'Enable voice responses'}>
                   {ttsEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
-                </Button>
-              )}
+                </Button>}
             </div>
           </div>
         </div>
