@@ -312,7 +312,7 @@ const Chatbot = () => {
               size="icon" 
               onClick={handleMicClick}
               disabled={isLoading || isTranscribing}
-              className={`${isRecording ? 'bg-destructive hover:bg-destructive/90' : 'bg-secondary hover:bg-secondary/80'} text-foreground border border-border`}
+              className={`${isRecording ? 'bg-destructive hover:bg-destructive/90 text-destructive-foreground' : 'bg-accent hover:bg-accent/90 text-accent-foreground'}`}
             >
               {isTranscribing ? (
                 <Loader2 size={18} className="animate-spin" />
