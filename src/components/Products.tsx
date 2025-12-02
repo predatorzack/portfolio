@@ -38,7 +38,7 @@ const products = [{
     sublabel: "User Retention"
   }, {
     icon: Users,
-    label: "25%",
+    label: "70%",
     sublabel: "Retention Increase"
   }, {
     icon: Zap,
