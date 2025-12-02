@@ -26,6 +26,10 @@ const Chatbot = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const analyserRef = useRef<AnalyserNode | null>(null);
+  const silenceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const silenceStartRef = useRef<number | null>(null);
   const {
     toast
   } = useToast();
@@ -122,6 +126,31 @@ const Chatbot = () => {
       setIsLoading(false);
     }
   };
+  const SILENCE_THRESHOLD = 15; // Audio level below this is considered silence
+  const SILENCE_DURATION = 1500; // Stop after 1.5 seconds of silence
+
+  const checkSilence = () => {
+    if (!analyserRef.current || !mediaRecorderRef.current) return;
+    
+    const dataArray = new Uint8Array(analyserRef.current.frequencyBinCount);
+    analyserRef.current.getByteFrequencyData(dataArray);
+    
+    const average = dataArray.reduce((a, b) => a + b, 0) / dataArray.length;
+    
+    if (average < SILENCE_THRESHOLD) {
+      if (!silenceStartRef.current) {
+        silenceStartRef.current = Date.now();
+      } else if (Date.now() - silenceStartRef.current > SILENCE_DURATION) {
+        stopRecording();
+        return;
+      }
+    } else {
+      silenceStartRef.current = null;
+    }
+    
+    silenceTimeoutRef.current = setTimeout(checkSilence, 100);
+  };
+
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
@@ -130,11 +159,21 @@ const Chatbot = () => {
           noiseSuppression: true
         }
       });
+      
+      // Set up audio analysis for silence detection
+      audioContextRef.current = new AudioContext();
+      const source = audioContextRef.current.createMediaStreamSource(stream);
+      analyserRef.current = audioContextRef.current.createAnalyser();
+      analyserRef.current.fftSize = 256;
+      source.connect(analyserRef.current);
+      
       const mediaRecorder = new MediaRecorder(stream, {
         mimeType: 'audio/webm'
       });
       mediaRecorderRef.current = mediaRecorder;
       audioChunksRef.current = [];
+      silenceStartRef.current = null;
+      
       mediaRecorder.ondataavailable = event => {
         if (event.data.size > 0) {
           audioChunksRef.current.push(event.data);
@@ -142,6 +181,13 @@ const Chatbot = () => {
       };
       mediaRecorder.onstop = async () => {
         stream.getTracks().forEach(track => track.stop());
+        if (audioContextRef.current) {
+          audioContextRef.current.close();
+          audioContextRef.current = null;
+        }
+        if (silenceTimeoutRef.current) {
+          clearTimeout(silenceTimeoutRef.current);
+        }
         const audioBlob = new Blob(audioChunksRef.current, {
           type: 'audio/webm'
         });
@@ -149,9 +195,13 @@ const Chatbot = () => {
       };
       mediaRecorder.start();
       setIsRecording(true);
+      
+      // Start silence detection after a brief delay to allow user to start speaking
+      setTimeout(() => checkSilence(), 500);
+      
       toast({
         title: "Recording",
-        description: "Speak now..."
+        description: "Speak now... (stops automatically on silence)"
       });
     } catch (error) {
       console.error("Microphone error:", error);
@@ -163,6 +213,10 @@ const Chatbot = () => {
     }
   };
   const stopRecording = () => {
+    if (silenceTimeoutRef.current) {
+      clearTimeout(silenceTimeoutRef.current);
+      silenceTimeoutRef.current = null;
+    }
     if (mediaRecorderRef.current && isRecording) {
       mediaRecorderRef.current.stop();
       setIsRecording(false);
