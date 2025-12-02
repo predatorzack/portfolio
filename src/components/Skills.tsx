@@ -35,7 +35,7 @@ const skills = [
   {
     icon: Rocket,
     title: "Data & Analytics",
-    description: "Metrics definition, dashboards, data-driven decisions, ranking algorithms",
+    description: "Metrics definition, SQL & Excel, data-driven decisions, ranking algorithms",
     color: "from-indigo-500/10 to-violet-500/10"
   }
 ];
