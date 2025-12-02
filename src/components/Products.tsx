@@ -25,29 +25,6 @@ const products = [{
   tags: ["AI/ML", "Multi-Agent Systems", "B2B SaaS", "Healthcare", "Hospitality"],
   color: "from-purple-500/5 to-pink-500/5"
 }, {
-  company: "DotPe",
-  companyUrl: "https://www.dotpe.in/",
-  role: "Product Manager",
-  period: "Jul 2021 - Oct 2022",
-  title: "Bifrost - B2B SaaS Platform for FnB",
-  description: "Built comprehensive platform to manage catalog and order processing for FnB merchants, onboarding major enterprise clients",
-  achievements: ["Onboarded McDonald's and Haldiram's as enterprise clients", "Generated 4M INR in ARR", "Processed 10M+ lifetime orders", "Led development of Fine Dine Suite with kitchen dashboards and waiter app", "Reduced table turnaround time by 20%", "Improved delivery metrics from 97% to 98.2% using data-based ranking algorithms"],
-  metrics: [{
-    icon: TrendingUp,
-    label: "4M INR",
-    sublabel: "Annual Revenue"
-  }, {
-    icon: Users,
-    label: "10M+",
-    sublabel: "Orders Processed"
-  }, {
-    icon: Zap,
-    label: "20%",
-    sublabel: "Turnaround Reduction"
-  }],
-  tags: ["B2B SaaS", "FnB Tech", "Enterprise Sales", "Order Management"],
-  color: "from-orange-500/5 to-red-500/5"
-}, {
   company: "ElectricPe",
   companyUrl: "https://electricpe.com/",
   role: "Product Manager",
@@ -70,6 +47,29 @@ const products = [{
   }],
   tags: ["B2C", "User Retention", "Gamification", "UX Design"],
   color: "from-green-500/5 to-emerald-500/5"
+}, {
+  company: "DotPe",
+  companyUrl: "https://www.dotpe.in/",
+  role: "Product Manager",
+  period: "Jul 2021 - Oct 2022",
+  title: "Bifrost - B2B SaaS Platform for FnB",
+  description: "Built comprehensive platform to manage catalog and order processing for FnB merchants, onboarding major enterprise clients",
+  achievements: ["Onboarded McDonald's and Haldiram's as enterprise clients", "Generated 4M INR in ARR", "Processed 10M+ lifetime orders", "Led development of Fine Dine Suite with kitchen dashboards and waiter app", "Reduced table turnaround time by 20%", "Improved delivery metrics from 97% to 98.2% using data-based ranking algorithms"],
+  metrics: [{
+    icon: TrendingUp,
+    label: "4M INR",
+    sublabel: "Annual Revenue"
+  }, {
+    icon: Users,
+    label: "10M+",
+    sublabel: "Orders Processed"
+  }, {
+    icon: Zap,
+    label: "20%",
+    sublabel: "Turnaround Reduction"
+  }],
+  tags: ["B2B SaaS", "FnB Tech", "Enterprise Sales", "Order Management"],
+  color: "from-orange-500/5 to-red-500/5"
 }, {
   company: "Spinny",
   companyUrl: "https://www.spinny.com/",
