@@ -66,7 +66,7 @@ const products = [{
   }, {
     icon: Zap,
     label: "20%",
-    sublabel: "Turnaround Reduction"
+    sublabel: "TAT Reduction"
   }],
   tags: ["B2B SaaS", "FnB Tech", "Enterprise Sales", "Order Management"],
   color: "from-orange-500/5 to-red-500/5"
