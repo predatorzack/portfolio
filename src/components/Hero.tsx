@@ -32,7 +32,7 @@ const Hero = () => {
           
           <div className="flex flex-wrap gap-4 justify-center animate-fade-in-up [animation-delay:800ms] opacity-0 [animation-fill-mode:forwards]">
             <Button size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90 font-medium text-lg px-8 animate-glow" onClick={() => scrollToSection("products")}>
-              View Case Studies
+              View Product Work 
             </Button>
             <Button size="lg" variant="outline" onClick={() => scrollToSection("contact")} className="border-accent/50 hover:border-accent font-medium text-lg px-8 bg-accent text-primary">
               Get In Touch
