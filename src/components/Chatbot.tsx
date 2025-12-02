@@ -2,7 +2,13 @@ import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { X, Send, Bot, User, Mic, MicOff, Loader2, Volume2, VolumeX } from "lucide-react";
+import { X, Send, Bot, User, Mic, MicOff, Loader2, Volume2, VolumeX, ChevronDown } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
 import chatbotIcon from "@/assets/chatbot-icon.avif";
 
@@ -15,6 +21,14 @@ const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/portfolio-ch
 const TRANSCRIBE_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/voice-transcribe`;
 const TTS_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/text-to-speech`;
 const QUICK_REPLIES = ["What's your experience?", "Tell me about your expertise", "What is HeyAlpha?", "Where did you study?"];
+const VOICE_OPTIONS = [
+  { id: 'alloy', label: 'Alloy' },
+  { id: 'echo', label: 'Echo' },
+  { id: 'fable', label: 'Fable' },
+  { id: 'nova', label: 'Nova' },
+  { id: 'onyx', label: 'Onyx' },
+  { id: 'shimmer', label: 'Shimmer' },
+];
 const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([{
@@ -28,6 +42,7 @@ const Chatbot = () => {
   const [isTranscribing, setIsTranscribing] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [ttsEnabled, setTtsEnabled] = useState(true);
+  const [selectedVoice, setSelectedVoice] = useState('alloy');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
@@ -148,7 +163,7 @@ const Chatbot = () => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`
         },
-        body: JSON.stringify({ text, voice: 'alloy' })
+        body: JSON.stringify({ text, voice: selectedVoice })
       });
 
       if (!response.ok) {
@@ -312,18 +327,44 @@ const Chatbot = () => {
                 <p className="text-xs text-muted-foreground">Ask about Sohit's experience</p>
               </div>
             </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => {
-                if (isSpeaking) stopSpeaking();
-                setTtsEnabled(!ttsEnabled);
-              }}
-              className={`h-8 w-8 ${ttsEnabled ? 'text-accent' : 'text-muted-foreground'}`}
-              title={ttsEnabled ? 'Disable voice responses' : 'Enable voice responses'}
-            >
-              {isSpeaking ? <Loader2 size={16} className="animate-spin" /> : ttsEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
-            </Button>
+            <div className="flex items-center gap-1">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 px-2 text-xs text-muted-foreground hover:text-foreground"
+                    disabled={!ttsEnabled}
+                  >
+                    {VOICE_OPTIONS.find(v => v.id === selectedVoice)?.label}
+                    <ChevronDown size={12} className="ml-1" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  {VOICE_OPTIONS.map((voice) => (
+                    <DropdownMenuItem
+                      key={voice.id}
+                      onClick={() => setSelectedVoice(voice.id)}
+                      className={selectedVoice === voice.id ? 'bg-accent/20' : ''}
+                    >
+                      {voice.label}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => {
+                  if (isSpeaking) stopSpeaking();
+                  setTtsEnabled(!ttsEnabled);
+                }}
+                className={`h-8 w-8 ${ttsEnabled ? 'text-accent' : 'text-muted-foreground'}`}
+                title={ttsEnabled ? 'Disable voice responses' : 'Enable voice responses'}
+              >
+                {isSpeaking ? <Loader2 size={16} className="animate-spin" /> : ttsEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
+              </Button>
+            </div>
           </div>
         </div>
 
