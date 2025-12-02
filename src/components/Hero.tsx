@@ -17,7 +17,7 @@ const Hero = () => {
           className="p-2 rounded-full bg-primary-foreground/10 hover:bg-accent/20 border border-primary-foreground/20 hover:border-accent transition-all duration-300 group"
           aria-label="LinkedIn Profile"
         >
-          <Linkedin size={20} className="text-primary-foreground/80 group-hover:text-accent transition-colors" />
+          <Linkedin size={30} className="text-primary-foreground/80 group-hover:text-accent transition-colors" />
         </a>
         <a 
           href="https://github.com/predatorzack" 
@@ -26,7 +26,7 @@ const Hero = () => {
           className="p-2 rounded-full bg-primary-foreground/10 hover:bg-accent/20 border border-primary-foreground/20 hover:border-accent transition-all duration-300 group"
           aria-label="GitHub Profile"
         >
-          <Github size={20} className="text-primary-foreground/80 group-hover:text-accent transition-colors" />
+          <Github size={30} className="text-primary-foreground/80 group-hover:text-accent transition-colors" />
         </a>
       </div>
       
