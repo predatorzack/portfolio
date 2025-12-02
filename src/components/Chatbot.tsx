@@ -275,7 +275,7 @@ const Chatbot = () => {
 
         {/* Quick Replies */}
         {showSuggestions && !isLoading && <div className="px-4 pb-2 flex flex-wrap gap-2">
-            {QUICK_REPLIES.map((question, index) => <button key={index} onClick={() => handleQuickReply(question)} className="text-xs px-3 py-1.5 rounded-full border border-accent/30 hover:bg-accent/10 transition-colors text-accent">
+            {QUICK_REPLIES.map((question, index) => <button key={index} onClick={() => handleQuickReply(question)} className="text-xs px-3 py-1.5 rounded-full border border-accent/30 hover:bg-accent/10 transition-colors text-[#2cacbf]">
                 {question}
               </button>)}
           </div>}
