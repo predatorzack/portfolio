@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { X, Send, Bot, User, Mic, MicOff, Loader2, Volume2, VolumeX, ChevronDown } from "lucide-react";
+import { X, Send, Bot, User, Mic, MicOff, Loader2, Volume2, VolumeX, ChevronDown, Square } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -353,19 +353,28 @@ const Chatbot = () => {
                   ))}
                 </DropdownMenuContent>
               </DropdownMenu>
-              {isSpeaking && <AudioWaveform />}
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => {
-                  if (isSpeaking) stopSpeaking();
-                  setTtsEnabled(!ttsEnabled);
-                }}
-                className={`h-8 w-8 ${ttsEnabled ? 'text-accent' : 'text-muted-foreground'}`}
-                title={ttsEnabled ? 'Disable voice responses' : 'Enable voice responses'}
-              >
-                {ttsEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
-              </Button>
+              {isSpeaking ? (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={stopSpeaking}
+                  className="h-8 px-2 text-destructive hover:text-destructive hover:bg-destructive/10 flex items-center gap-1"
+                  title="Stop speaking"
+                >
+                  <Square size={12} className="fill-current" />
+                  <AudioWaveform />
+                </Button>
+              ) : (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setTtsEnabled(!ttsEnabled)}
+                  className={`h-8 w-8 ${ttsEnabled ? 'text-accent' : 'text-muted-foreground'}`}
+                  title={ttsEnabled ? 'Disable voice responses' : 'Enable voice responses'}
+                >
+                  {ttsEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
+                </Button>
+              )}
             </div>
           </div>
         </div>
