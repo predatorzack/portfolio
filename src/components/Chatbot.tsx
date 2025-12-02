@@ -2,8 +2,9 @@ import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { MessageCircle, X, Send, Bot, User } from "lucide-react";
+import { X, Send, Bot, User } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import chatbotIcon from "@/assets/chatbot-icon.avif";
 
 type Message = {
   role: "user" | "assistant";
@@ -130,13 +131,16 @@ const Chatbot = () => {
   return (
     <>
       {/* Floating Chat Button */}
-      <Button
+      <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 z-50 h-14 w-14 rounded-full bg-accent hover:bg-accent/90 text-accent-foreground shadow-lg shadow-accent/25"
-        size="icon"
+        className="fixed bottom-6 right-6 z-50 h-16 w-16 rounded-full bg-accent hover:bg-accent/90 shadow-lg shadow-accent/25 flex items-center justify-center transition-transform hover:scale-105 overflow-hidden"
       >
-        {isOpen ? <X size={24} /> : <MessageCircle size={24} />}
-      </Button>
+        {isOpen ? (
+          <X size={24} className="text-accent-foreground" />
+        ) : (
+          <img src={chatbotIcon} alt="Chat" className="h-full w-full object-cover" />
+        )}
+      </button>
 
       {/* Chat Window */}
       {isOpen && (
