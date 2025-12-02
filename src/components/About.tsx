@@ -1,9 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { GraduationCap, ExternalLink } from "lucide-react";
-
 const About = () => {
-  return (
-    <section id="about" className="py-24 bg-background">
+  return <section id="about" className="py-24 bg-background">
       <div className="container mx-auto px-6">
         <div className="max-w-4xl mx-auto">
           <h2 className="font-['Space_Grotesk'] text-4xl md:text-5xl font-bold text-foreground mb-8">
@@ -33,14 +31,9 @@ const About = () => {
                 <h3 className="font-['Space_Grotesk'] text-xl font-semibold text-foreground mb-3 flex items-center gap-2">
                   Education
                 </h3>
-                <p className="text-foreground font-medium mb-1">Bachelor of Technology (B.Tech.), Mechanical Engineering</p>
-                <a 
-                  href="https://www.iitism.ac.in/" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-accent hover:text-accent/80 font-medium inline-flex items-center gap-2 transition-colors group"
-                >
-                  Indian Institute of Technology ISM Dhanbad
+                <p className="text-foreground font-medium mb-1">Bachelor of Technology (B.Tech), Mechanical Engineering</p>
+                <a href="https://www.iitism.ac.in/" target="_blank" rel="noopener noreferrer" className="text-accent hover:text-accent/80 font-medium inline-flex items-center gap-2 transition-colors group">
+                  Indian Institute of Technology (ISM) Dhanbad
                   <ExternalLink className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                 </a>
                 <p className="text-muted-foreground mt-1">CGPA: 8.26/10 | 2013-2017</p>
@@ -49,8 +42,6 @@ const About = () => {
           </Card>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default About;
