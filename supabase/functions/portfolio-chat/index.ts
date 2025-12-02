@@ -55,6 +55,20 @@ serve(async (req) => {
 
   try {
     const { messages } = await req.json();
+
+    // Input validation
+    if (!Array.isArray(messages)) {
+      throw new Error("Messages must be an array");
+    }
+    if (messages.length > 50) {
+      throw new Error("Too many messages (max 50)");
+    }
+    for (const msg of messages) {
+      if (typeof msg.content !== "string" || msg.content.length > 4000) {
+        throw new Error("Invalid message content (max 4000 characters per message)");
+      }
+    }
+
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     
     if (!LOVABLE_API_KEY) {
