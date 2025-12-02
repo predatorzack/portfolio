@@ -9,6 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import AudioWaveform from "./AudioWaveform";
 import { useToast } from "@/hooks/use-toast";
 import chatbotIcon from "@/assets/chatbot-icon.avif";
 
@@ -352,6 +353,7 @@ const Chatbot = () => {
                   ))}
                 </DropdownMenuContent>
               </DropdownMenu>
+              {isSpeaking && <AudioWaveform />}
               <Button
                 variant="ghost"
                 size="icon"
@@ -362,7 +364,7 @@ const Chatbot = () => {
                 className={`h-8 w-8 ${ttsEnabled ? 'text-accent' : 'text-muted-foreground'}`}
                 title={ttsEnabled ? 'Disable voice responses' : 'Enable voice responses'}
               >
-                {isSpeaking ? <Loader2 size={16} className="animate-spin" /> : ttsEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
+                {ttsEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
               </Button>
             </div>
           </div>
