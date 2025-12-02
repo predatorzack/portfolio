@@ -39,7 +39,7 @@ const products = [{
   }, {
     icon: Users,
     label: "70%",
-    sublabel: "Retention Increase"
+    sublabel: "Decreased Support Tickets"
   }, {
     icon: Zap,
     label: "Web",
