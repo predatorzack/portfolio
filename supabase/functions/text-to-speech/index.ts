@@ -27,8 +27,16 @@ serve(async (req) => {
   try {
     const { text, voice = 'alloy' } = await req.json();
 
-    if (!text) {
+    // Input validation
+    if (!text || typeof text !== 'string') {
       throw new Error('No text provided');
+    }
+    if (text.length > 4096) {
+      throw new Error('Text too long (max 4096 characters)');
+    }
+    const allowedVoices = ['alloy', 'echo', 'fable', 'nova', 'onyx', 'shimmer'];
+    if (!allowedVoices.includes(voice)) {
+      throw new Error('Invalid voice parameter');
     }
 
     const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
