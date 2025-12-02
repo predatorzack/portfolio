@@ -5,6 +5,20 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// Convert ArrayBuffer to base64 in chunks to avoid stack overflow
+function arrayBufferToBase64(buffer: ArrayBuffer): string {
+  const bytes = new Uint8Array(buffer);
+  const chunkSize = 0x8000; // 32KB chunks
+  let binary = '';
+  
+  for (let i = 0; i < bytes.length; i += chunkSize) {
+    const chunk = bytes.subarray(i, i + chunkSize);
+    binary += String.fromCharCode.apply(null, chunk as unknown as number[]);
+  }
+  
+  return btoa(binary);
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -45,9 +59,9 @@ serve(async (req) => {
     }
 
     const arrayBuffer = await response.arrayBuffer();
-    const base64Audio = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)));
+    const base64Audio = arrayBufferToBase64(arrayBuffer);
 
-    console.log('Speech generated successfully');
+    console.log('Speech generated successfully, size:', arrayBuffer.byteLength);
 
     return new Response(
       JSON.stringify({ audioContent: base64Audio }),
