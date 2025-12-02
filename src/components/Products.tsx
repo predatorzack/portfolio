@@ -54,7 +54,7 @@ const products = [{
   period: "Jul 2021 - Oct 2022",
   title: "Bifrost - B2B SaaS Platform for FnB",
   description: "Built comprehensive platform to manage catalog and order processing for FnB merchants, onboarding major enterprise clients",
-  achievements: ["Onboarded McDonald's and Haldiram's as enterprise clients", "Generated 4M INR in ARR and Processed 10M+ lifetime orders", "Led development of Fine Dine Suite with kitchen dashboards and waiter app", "Managed payment gateway integrations for Bifrost platform ensuring 99.9% transaction reliability", "Reduced table turnaround time by 20%", "Improved delivery metrics from 97% to 98.2% using data-based ranking algorithms"],
+  achievements: ["Onboarded McDonald's and Haldiram's as enterprise clients", "Generated 4M INR in ARR and Processed 10M+ lifetime orders", "Managed payment gateway integrations for Bifrost platform ensuring 99.9% transaction reliability", "Led development of Fine Dine Suite with kitchen dashboards and waiter app", "Reduced table turnaround time by 20%", "Improved delivery metrics from 97% to 98.2% using data-based ranking algorithms"],
   metrics: [{
     icon: TrendingUp,
     label: "4M INR",
