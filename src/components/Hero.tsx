@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ArrowDown, Download } from "lucide-react";
+import { ArrowDown, Download, Linkedin, Github } from "lucide-react";
 import profileImage from "@/assets/profile.jpg";
 const Hero = () => {
   const scrollToSection = (id: string) => {
@@ -8,6 +8,28 @@ const Hero = () => {
     });
   };
   return <section className="min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-hero-gradient-from to-hero-gradient-to">
+      {/* Social Icons - Top Right */}
+      <div className="absolute top-6 right-6 flex gap-3 z-20">
+        <a 
+          href="https://www.linkedin.com/in/sohitkumar/" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="p-2 rounded-full bg-primary-foreground/10 hover:bg-accent/20 border border-primary-foreground/20 hover:border-accent transition-all duration-300 group"
+          aria-label="LinkedIn Profile"
+        >
+          <Linkedin size={20} className="text-primary-foreground/80 group-hover:text-accent transition-colors" />
+        </a>
+        <a 
+          href="https://github.com/predatorzack" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="p-2 rounded-full bg-primary-foreground/10 hover:bg-accent/20 border border-primary-foreground/20 hover:border-accent transition-all duration-300 group"
+          aria-label="GitHub Profile"
+        >
+          <Github size={20} className="text-primary-foreground/80 group-hover:text-accent transition-colors" />
+        </a>
+      </div>
+      
       <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wMyI+PHBhdGggZD0iTTM2IDM0djItSDI0di0yaDEyek0zNiAzMHYySDI0di0yaDF6Ii8+PC9nPjwvZz48L3N2Zz4=')] opacity-20"></div>
       
       <div className="container mx-auto px-6 z-10">
