@@ -2,11 +2,13 @@ import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { X, Send, Bot, User, Mic, MicOff, Loader2, Volume2, VolumeX, ChevronDown, Square } from "lucide-react";
+import { X, Send, User, Mic, MicOff, Loader2, Volume2, VolumeX, ChevronDown, Square } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import AudioWaveform from "./AudioWaveform";
 import { useToast } from "@/hooks/use-toast";
 import chatbotIcon from "@/assets/chatbot-icon.avif";
+import profileImg from "@/assets/profile.jpg";
 type Message = {
   role: "user" | "assistant";
   content: string;
@@ -320,9 +322,10 @@ const Chatbot = () => {
         <div className="p-4 border-b border-border bg-gradient-to-r from-accent/10 to-accent/5 rounded-t-lg">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-full bg-accent/20 flex items-center justify-center">
-                <Bot className="h-5 w-5 text-accent" />
-              </div>
+              <Avatar className="h-10 w-10">
+                <AvatarImage src={profileImg} alt="Sohit Kumar" />
+                <AvatarFallback className="bg-accent/20 text-accent">SK</AvatarFallback>
+              </Avatar>
               <div>
                 <h3 className="font-['Space_Grotesk'] font-semibold text-foreground">Ask Sohit </h3>
                 
@@ -355,9 +358,10 @@ const Chatbot = () => {
         {/* Messages */}
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
           {messages.map((message, index) => <div key={index} className={`flex gap-2 ${message.role === "user" ? "justify-end" : "justify-start"}`}>
-              {message.role === "assistant" && <div className="h-8 w-8 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0">
-                  <Bot className="h-4 w-4 text-accent" />
-                </div>}
+              {message.role === "assistant" && <Avatar className="h-8 w-8 flex-shrink-0">
+                  <AvatarImage src={profileImg} alt="Sohit" />
+                  <AvatarFallback className="bg-accent/20 text-accent text-xs">SK</AvatarFallback>
+                </Avatar>}
               <div className={`max-w-[80%] rounded-2xl px-4 py-2 ${message.role === "user" ? "bg-accent text-accent-foreground rounded-br-md" : "bg-secondary text-secondary-foreground rounded-bl-md"}`}>
                 <p className="text-sm whitespace-pre-wrap">{message.content}</p>
               </div>
@@ -366,9 +370,10 @@ const Chatbot = () => {
                 </div>}
             </div>)}
           {isLoading && messages[messages.length - 1]?.role === "user" && <div className="flex gap-2 justify-start">
-              <div className="h-8 w-8 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0">
-                <Bot className="h-4 w-4 text-accent" />
-              </div>
+              <Avatar className="h-8 w-8 flex-shrink-0">
+                <AvatarImage src={profileImg} alt="Sohit" />
+                <AvatarFallback className="bg-accent/20 text-accent text-xs">SK</AvatarFallback>
+              </Avatar>
               <div className="bg-secondary rounded-2xl rounded-bl-md px-4 py-2">
                 <div className="flex gap-1">
                   <span className="h-2 w-2 bg-muted-foreground rounded-full animate-bounce [animation-delay:0ms]" />
