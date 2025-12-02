@@ -97,9 +97,7 @@ const products = [{
 const Products = () => {
   return <section id="products" className="py-24 bg-background">
       <div className="container mx-auto px-6">
-        <h2 className="font-['Space_Grotesk'] text-4xl md:text-5xl font-bold text-foreground mb-4 text-center">
-          Product Case Studies
-        </h2>
+        <h2 className="font-['Space_Grotesk'] text-4xl md:text-5xl font-bold text-foreground mb-4 text-center">Product Work Experience</h2>
         <p className="text-center text-muted-foreground mb-16 max-w-2xl mx-auto">
           End-to-end product leadership across AI platforms, B2B SaaS, and consumer applications
         </p>
