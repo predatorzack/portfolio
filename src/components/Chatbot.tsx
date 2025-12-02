@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -50,21 +50,12 @@ const Chatbot = () => {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [ttsEnabled, setTtsEnabled] = useState(true);
   const [selectedVoice, setSelectedVoice] = useState('alloy');
-  const messagesEndRef = useRef<HTMLDivElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const {
     toast
   } = useToast();
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({
-      behavior: "smooth"
-    });
-  };
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
   const handleQuickReply = (question: string) => {
     setShowSuggestions(false);
     sendMessageWithText(question);
@@ -382,7 +373,7 @@ const Chatbot = () => {
                 </div>
               </div>
             </div>}
-          <div ref={messagesEndRef} />
+          
         </div>
 
         {/* Quick Replies */}
