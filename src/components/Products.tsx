@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { TrendingUp, Clock, Users, Zap, ExternalLink } from "lucide-react";
+import { TrendingUp, ArrowDown, Users, Zap, ExternalLink } from "lucide-react";
 const products = [{
   company: "Alphadroid",
   companyUrl: "https://www.alphadroid.io/",
@@ -37,7 +37,7 @@ const products = [{
     label: "85%",
     sublabel: "User Retention"
   }, {
-    icon: Clock,
+    icon: ArrowDown,
     label: "70%",
     sublabel: "Decreased Support Tickets"
   }, {
