@@ -15,7 +15,7 @@ type Message = {
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/portfolio-chat`;
 const TRANSCRIBE_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/voice-transcribe`;
 const TTS_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/text-to-speech`;
-const QUICK_REPLIES = ["What's your experience?", "Tell me about your expertise", "What is HeyAlpha?", "Where did you study?"];
+const QUICK_REPLIES = ["What's your experience?", "Tell me about your expertise", "What is HeyAlpha?", "Where did you study?", "What products have you built?", "What are your skills?"];
 const VOICE_OPTIONS = [{
   id: 'alloy',
   label: 'Alloy'
