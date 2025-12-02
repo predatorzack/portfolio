@@ -2,15 +2,18 @@ import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { X, Send, Bot, User, Mic, MicOff, Loader2 } from "lucide-react";
+import { X, Send, Bot, User, Mic, MicOff, Loader2, Volume2, VolumeX } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import chatbotIcon from "@/assets/chatbot-icon.avif";
+
 type Message = {
   role: "user" | "assistant";
   content: string;
 };
+
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/portfolio-chat`;
 const TRANSCRIBE_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/voice-transcribe`;
+const TTS_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/text-to-speech`;
 const QUICK_REPLIES = ["What's your experience?", "Tell me about your expertise", "What is HeyAlpha?", "Where did you study?"];
 const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,12 +26,13 @@ const Chatbot = () => {
   const [showSuggestions, setShowSuggestions] = useState(true);
   const [isRecording, setIsRecording] = useState(false);
   const [isTranscribing, setIsTranscribing] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [ttsEnabled, setTtsEnabled] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
-  const {
-    toast
-  } = useToast();
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const { toast } = useToast();
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({
       behavior: "smooth"
@@ -111,6 +115,10 @@ const Chatbot = () => {
           }
         }
       }
+      // Speak the response if TTS is enabled
+      if (assistantContent && ttsEnabled) {
+        speakText(assistantContent);
+      }
     } catch (error) {
       console.error("Chat error:", error);
       toast({
@@ -120,6 +128,66 @@ const Chatbot = () => {
       });
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const speakText = async (text: string) => {
+    if (!text.trim()) return;
+    
+    // Stop any current audio
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+
+    setIsSpeaking(true);
+    try {
+      const response = await fetch(TTS_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`
+        },
+        body: JSON.stringify({ text, voice: 'alloy' })
+      });
+
+      if (!response.ok) {
+        throw new Error('TTS failed');
+      }
+
+      const data = await response.json();
+      const audioData = `data:audio/mp3;base64,${data.audioContent}`;
+      
+      const audio = new Audio(audioData);
+      audioRef.current = audio;
+      
+      audio.onended = () => {
+        setIsSpeaking(false);
+        audioRef.current = null;
+      };
+      
+      audio.onerror = () => {
+        setIsSpeaking(false);
+        audioRef.current = null;
+      };
+
+      await audio.play();
+    } catch (error) {
+      console.error('TTS error:', error);
+      setIsSpeaking(false);
+      toast({
+        title: "Speech Error",
+        description: "Failed to generate speech.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const stopSpeaking = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+      setIsSpeaking(false);
     }
   };
   const startRecording = async () => {
@@ -234,14 +302,28 @@ const Chatbot = () => {
     {isOpen && <Card className="fixed bottom-24 right-6 z-50 w-[350px] md:w-[400px] h-[500px] flex flex-col border-accent/30 shadow-xl shadow-accent/10 animate-fade-in">
         {/* Header */}
         <div className="p-4 border-b border-border bg-gradient-to-r from-accent/10 to-accent/5 rounded-t-lg">
-          <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-full bg-accent/20 flex items-center justify-center">
-              <Bot className="h-5 w-5 text-accent" />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-full bg-accent/20 flex items-center justify-center">
+                <Bot className="h-5 w-5 text-accent" />
+              </div>
+              <div>
+                <h3 className="font-['Space_Grotesk'] font-semibold text-foreground">Chat with AI</h3>
+                <p className="text-xs text-muted-foreground">Ask about Sohit's experience</p>
+              </div>
             </div>
-            <div>
-              <h3 className="font-['Space_Grotesk'] font-semibold text-foreground">Chat with AI</h3>
-              <p className="text-xs text-muted-foreground">Ask about Sohit's experience</p>
-            </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => {
+                if (isSpeaking) stopSpeaking();
+                setTtsEnabled(!ttsEnabled);
+              }}
+              className={`h-8 w-8 ${ttsEnabled ? 'text-accent' : 'text-muted-foreground'}`}
+              title={ttsEnabled ? 'Disable voice responses' : 'Enable voice responses'}
+            >
+              {isSpeaking ? <Loader2 size={16} className="animate-spin" /> : ttsEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
+            </Button>
           </div>
         </div>
 
