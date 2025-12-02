@@ -114,14 +114,6 @@ export default {
             boxShadow: "0 0 30px hsl(var(--accent-glow) / 0.5)",
           },
         },
-        "subtle-bounce": {
-          "0%, 100%": {
-            transform: "translateY(0)",
-          },
-          "50%": {
-            transform: "translateY(-6px)",
-          },
-        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -130,7 +122,6 @@ export default {
         "fade-in-up": "fade-in-up 0.8s ease-out",
         "slide-in": "slide-in 0.5s ease-out",
         "glow": "glow 2s ease-in-out infinite",
-        "subtle-bounce": "subtle-bounce 2s ease-in-out infinite",
       },
     },
   },
