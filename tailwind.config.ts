@@ -122,6 +122,14 @@ export default {
             transform: "translateY(-6px)",
           },
         },
+        "waveform": {
+          "0%, 100%": {
+            transform: "scaleY(0.3)",
+          },
+          "50%": {
+            transform: "scaleY(1)",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -131,6 +139,7 @@ export default {
         "slide-in": "slide-in 0.5s ease-out",
         "glow": "glow 2s ease-in-out infinite",
         "subtle-bounce": "subtle-bounce 2s ease-in-out infinite",
+        "waveform": "waveform 0.5s ease-in-out infinite",
       },
     },
   },
