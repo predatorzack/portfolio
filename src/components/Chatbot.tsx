@@ -12,6 +12,13 @@ type Message = {
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/portfolio-chat`;
 
+const QUICK_REPLIES = [
+  "What's your experience?",
+  "Tell me about your expertise",
+  "What is HeyAlpha?",
+  "Where did you study?",
+];
+
 const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
@@ -19,6 +26,7 @@ const Chatbot = () => {
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
@@ -30,11 +38,15 @@ const Chatbot = () => {
     scrollToBottom();
   }, [messages]);
 
-  const sendMessage = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!input.trim() || isLoading) return;
+  const handleQuickReply = (question: string) => {
+    setShowSuggestions(false);
+    sendMessageWithText(question);
+  };
 
-    const userMessage: Message = { role: "user", content: input.trim() };
+  const sendMessageWithText = async (text: string) => {
+    if (!text.trim() || isLoading) return;
+
+    const userMessage: Message = { role: "user", content: text.trim() };
     setMessages(prev => [...prev, userMessage]);
     setInput("");
     setIsLoading(true);
@@ -108,6 +120,13 @@ const Chatbot = () => {
     }
   };
 
+  const sendMessage = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim()) return;
+    setShowSuggestions(false);
+    sendMessageWithText(input);
+  };
+
   return (
     <>
       {/* Floating Chat Button */}
@@ -179,6 +198,21 @@ const Chatbot = () => {
             )}
             <div ref={messagesEndRef} />
           </div>
+
+          {/* Quick Replies */}
+          {showSuggestions && !isLoading && (
+            <div className="px-4 pb-2 flex flex-wrap gap-2">
+              {QUICK_REPLIES.map((question, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleQuickReply(question)}
+                  className="text-xs px-3 py-1.5 rounded-full border border-accent/30 text-accent hover:bg-accent/10 transition-colors"
+                >
+                  {question}
+                </button>
+              ))}
+            </div>
+          )}
 
           {/* Input */}
           <form onSubmit={sendMessage} className="p-4 border-t border-border">
