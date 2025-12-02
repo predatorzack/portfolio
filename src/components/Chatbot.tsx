@@ -325,7 +325,7 @@ const Chatbot = () => {
               </div>
               <div>
                 <h3 className="font-['Space_Grotesk'] font-semibold text-foreground">Ask Sohit </h3>
-                <p className="text-xs text-muted-foreground">Ask about Sohit's experience</p>
+                
               </div>
             </div>
             <div className="flex items-center gap-1">
