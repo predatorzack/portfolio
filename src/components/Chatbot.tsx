@@ -40,7 +40,7 @@ const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([{
     role: "assistant",
-    content: "Hi! I'm Sohit's AI assistant. Ask me anything about his experience, skills, or background! You can also use the mic to speak."
+    content: "Hey! I'm Sohit. Ask me anything about my experience, skills, or background! You can also use the mic to speak."
   }]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
