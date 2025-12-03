@@ -283,7 +283,7 @@ const EmbeddedChat = () => {
   const handleMicClick = () => {
     if (isRecording) stopRecording();else startRecording();
   };
-  return <Card className="w-full h-[450px] flex flex-col border-accent/30 shadow-xl shadow-accent/10 animate-fade-in">
+  return <Card className="w-full h-[450px] flex flex-col shadow-xl shadow-accent/10 animate-fade-in border-muted-foreground">
       {/* Header */}
       <div className="p-3 border-b border-border bg-gradient-to-r from-accent/10 to-accent/5 rounded-t-lg">
         <div className="flex items-center justify-between">
