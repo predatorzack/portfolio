@@ -303,9 +303,16 @@ const Chatbot = () => {
   };
   return <>
     {/* Floating Chat Button */}
-    <button onClick={() => setIsOpen(!isOpen)} className={`fixed bottom-6 right-6 z-50 h-24 w-24 rounded-full bg-accent hover:bg-accent/90 shadow-lg shadow-accent/25 flex items-center justify-center transition-transform hover:scale-105 overflow-hidden ${!isOpen ? 'animate-subtle-bounce animate-glow' : ''}`}>
-      {isOpen ? <X size={32} className="text-accent-foreground" /> : <img src={chatbotIcon} alt="Chat" className="h-full w-full object-cover" />}
-    </button>
+    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-center gap-2">
+      {!isOpen && (
+        <span className="bg-accent text-accent-foreground text-sm font-semibold px-3 py-1 rounded-full shadow-md animate-fade-in">
+          Ask Me
+        </span>
+      )}
+      <button onClick={() => setIsOpen(!isOpen)} className={`h-24 w-24 rounded-full bg-accent hover:bg-accent/90 shadow-lg shadow-accent/25 flex items-center justify-center transition-transform hover:scale-105 overflow-hidden ${!isOpen ? 'animate-subtle-bounce animate-glow' : ''}`}>
+        {isOpen ? <X size={32} className="text-accent-foreground" /> : <img src={chatbotIcon} alt="Chat" className="h-full w-full object-cover" />}
+      </button>
+    </div>
 
     {/* Chat Window */}
     {isOpen && <Card className="fixed bottom-24 right-6 z-50 w-[350px] md:w-[400px] h-[500px] flex flex-col border-accent/30 shadow-xl shadow-accent/10 animate-fade-in">
