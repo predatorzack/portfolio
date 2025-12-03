@@ -108,10 +108,10 @@ export default {
         },
         "glow": {
           "0%, 100%": {
-            boxShadow: "0 0 20px hsl(var(--accent-glow) / 0.3)",
+            boxShadow: "0 0 25px hsl(var(--accent-glow) / 0.5), 0 0 50px hsl(var(--accent-glow) / 0.25)",
           },
           "50%": {
-            boxShadow: "0 0 30px hsl(var(--accent-glow) / 0.5)",
+            boxShadow: "0 0 40px hsl(var(--accent-glow) / 0.7), 0 0 80px hsl(var(--accent-glow) / 0.35)",
           },
         },
         "subtle-bounce": {
