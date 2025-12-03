@@ -130,6 +130,16 @@ export default {
             transform: "scaleY(1)",
           },
         },
+        "bounce-gentle": {
+          "0%, 100%": {
+            transform: "translateY(0)",
+            opacity: "1",
+          },
+          "50%": {
+            transform: "translateY(-4px)",
+            opacity: "0.9",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -140,6 +150,7 @@ export default {
         "glow": "glow 2s ease-in-out infinite",
         "subtle-bounce": "subtle-bounce 2s ease-in-out infinite",
         "waveform": "waveform 0.5s ease-in-out infinite",
+        "bounce-gentle": "bounce-gentle 1.5s ease-in-out infinite",
       },
     },
   },
