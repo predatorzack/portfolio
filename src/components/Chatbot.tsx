@@ -305,7 +305,7 @@ const Chatbot = () => {
     {/* Floating Chat Button */}
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-center gap-2">
       {!isOpen && (
-        <span className="bg-accent text-accent-foreground text-sm font-semibold px-3 py-1 rounded-full shadow-md animate-fade-in">
+        <span className="bg-accent text-accent-foreground text-sm font-semibold px-3 py-1 rounded-full shadow-md animate-bounce-gentle">
           Ask Me
         </span>
       )}
