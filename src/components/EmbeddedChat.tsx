@@ -216,7 +216,7 @@ const EmbeddedChat = () => {
       setIsRecording(true);
       toast({
         title: "Recording",
-        description: "Speak now..."
+        description: "Speak now... Press the mic icon again to stop and process."
       });
     } catch (error) {
       console.error("Microphone error:", error);
