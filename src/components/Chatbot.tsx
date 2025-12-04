@@ -52,10 +52,78 @@ const Chatbot = () => {
   const [selectedVoice, setSelectedVoice] = useState('alloy');
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const audioQueueRef = useRef<string[]>([]);
+  const isPlayingRef = useRef(false);
+  const currentAudioRef = useRef<HTMLAudioElement | null>(null);
+  const stopRequestedRef = useRef(false);
   const {
     toast
   } = useToast();
+
+  // Play next audio in queue
+  const playNextInQueue = async () => {
+    if (stopRequestedRef.current || audioQueueRef.current.length === 0) {
+      isPlayingRef.current = false;
+      setIsSpeaking(false);
+      return;
+    }
+
+    isPlayingRef.current = true;
+    setIsSpeaking(true);
+    const audioData = audioQueueRef.current.shift()!;
+    
+    const audio = new Audio(audioData);
+    currentAudioRef.current = audio;
+    
+    audio.onended = () => {
+      currentAudioRef.current = null;
+      playNextInQueue();
+    };
+    
+    audio.onerror = () => {
+      currentAudioRef.current = null;
+      playNextInQueue();
+    };
+    
+    try {
+      await audio.play();
+    } catch {
+      playNextInQueue();
+    }
+  };
+
+  // Add audio to queue and start playing if not already
+  const queueAudio = (audioDataUrl: string) => {
+    audioQueueRef.current.push(audioDataUrl);
+    if (!isPlayingRef.current && !stopRequestedRef.current) {
+      playNextInQueue();
+    }
+  };
+
+  // Convert a sentence to speech and queue it
+  const speakSentence = async (sentence: string, voice: string) => {
+    if (!sentence.trim() || stopRequestedRef.current) return;
+    
+    try {
+      const response = await fetch(TTS_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`
+        },
+        body: JSON.stringify({ text: sentence, voice })
+      });
+      
+      if (!response.ok || stopRequestedRef.current) return;
+      
+      const data = await response.json();
+      if (data.audioContent && !stopRequestedRef.current) {
+        queueAudio(`data:audio/mp3;base64,${data.audioContent}`);
+      }
+    } catch (error) {
+      console.error('TTS sentence error:', error);
+    }
+  };
   const handleQuickReply = (question: string) => {
     setShowSuggestions(false);
     sendMessageWithText(question);
@@ -69,7 +137,32 @@ const Chatbot = () => {
     setMessages(prev => [...prev, userMessage]);
     setInput("");
     setIsLoading(true);
+    
+    // Reset TTS state for new message
+    stopRequestedRef.current = false;
+    audioQueueRef.current = [];
+    
     let assistantContent = "";
+    let sentenceBuffer = "";
+    const voiceToUse = selectedVoice;
+    
+    // Split text into sentences for streaming TTS
+    const extractAndSpeakSentences = (text: string): string => {
+      const sentenceEnders = /([.!?])\s+/g;
+      let lastIndex = 0;
+      let match;
+      
+      while ((match = sentenceEnders.exec(text)) !== null) {
+        const sentence = text.slice(lastIndex, match.index + 1).trim();
+        if (sentence && ttsEnabled) {
+          speakSentence(sentence, voiceToUse);
+        }
+        lastIndex = match.index + match[0].length;
+      }
+      
+      return text.slice(lastIndex); // Return remaining text
+    };
+    
     try {
       const response = await fetch(CHAT_URL, {
         method: "POST",
@@ -110,6 +203,11 @@ const Chatbot = () => {
             const content = parsed.choices?.[0]?.delta?.content;
             if (content) {
               assistantContent += content;
+              sentenceBuffer += content;
+              
+              // Extract complete sentences and speak them
+              sentenceBuffer = extractAndSpeakSentences(sentenceBuffer);
+              
               setMessages(prev => {
                 const last = prev[prev.length - 1];
                 if (last?.role === "assistant" && prev.length > 1 && prev[prev.length - 2]?.role === "user") {
@@ -130,9 +228,10 @@ const Chatbot = () => {
           }
         }
       }
-      // Speak the response if TTS is enabled
-      if (assistantContent && ttsEnabled) {
-        speakText(assistantContent);
+      
+      // Speak any remaining text that didn't end with sentence punctuation
+      if (sentenceBuffer.trim() && ttsEnabled) {
+        speakSentence(sentenceBuffer.trim(), voiceToUse);
       }
     } catch (error) {
       console.error("Chat error:", error);
@@ -145,59 +244,16 @@ const Chatbot = () => {
       setIsLoading(false);
     }
   };
-  const speakText = async (text: string) => {
-    if (!text.trim()) return;
 
-    // Stop any current audio
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current = null;
-    }
-    setIsSpeaking(true);
-    try {
-      const response = await fetch(TTS_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`
-        },
-        body: JSON.stringify({
-          text,
-          voice: selectedVoice
-        })
-      });
-      if (!response.ok) {
-        throw new Error('TTS failed');
-      }
-      const data = await response.json();
-      const audioData = `data:audio/mp3;base64,${data.audioContent}`;
-      const audio = new Audio(audioData);
-      audioRef.current = audio;
-      audio.onended = () => {
-        setIsSpeaking(false);
-        audioRef.current = null;
-      };
-      audio.onerror = () => {
-        setIsSpeaking(false);
-        audioRef.current = null;
-      };
-      await audio.play();
-    } catch (error) {
-      console.error('TTS error:', error);
-      setIsSpeaking(false);
-      toast({
-        title: "Speech Error",
-        description: "Failed to generate speech.",
-        variant: "destructive"
-      });
-    }
-  };
   const stopSpeaking = () => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current = null;
-      setIsSpeaking(false);
+    stopRequestedRef.current = true;
+    audioQueueRef.current = [];
+    if (currentAudioRef.current) {
+      currentAudioRef.current.pause();
+      currentAudioRef.current = null;
     }
+    isPlayingRef.current = false;
+    setIsSpeaking(false);
   };
   const startRecording = async () => {
     try {
