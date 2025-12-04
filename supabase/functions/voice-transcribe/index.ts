@@ -87,7 +87,7 @@ serve(async (req) => {
   }
 
   try {
-    const { audio, language = 'hi' } = await req.json(); // Default to Hindi
+    const { audio, language } = await req.json(); // language is optional - Whisper auto-detects if not provided
     
     // Input validation
     if (!audio || typeof audio !== 'string') {
@@ -112,8 +112,13 @@ serve(async (req) => {
     const blob = new Blob([binaryAudio], { type: 'audio/webm' });
     formData.append('file', blob, 'audio.webm');
     formData.append('model', 'whisper-1');
-    // Add language hint to help Whisper correctly identify Hindi vs Urdu
-    formData.append('language', language);
+    // Only set language if explicitly provided - otherwise Whisper auto-detects
+    if (language) {
+      formData.append('language', language);
+      console.log('Language hint:', language);
+    } else {
+      console.log('Auto-detecting language...');
+    }
 
     console.log('Sending to OpenAI Whisper...');
     const response = await fetch('https://api.openai.com/v1/audio/transcriptions', {
