@@ -140,6 +140,49 @@ export default {
             opacity: "0.9",
           },
         },
+        "avatar-entrance": {
+          "0%": {
+            opacity: "0",
+            transform: "translateY(100px) scale(0.8)",
+          },
+          "60%": {
+            opacity: "1",
+            transform: "translateY(-10px) scale(1.05)",
+          },
+          "80%": {
+            transform: "translateY(5px) scale(0.98)",
+          },
+          "100%": {
+            opacity: "1",
+            transform: "translateY(0) scale(1)",
+          },
+        },
+        "wave-hand": {
+          "0%": {
+            transform: "rotate(0deg)",
+          },
+          "10%": {
+            transform: "rotate(14deg)",
+          },
+          "20%": {
+            transform: "rotate(-8deg)",
+          },
+          "30%": {
+            transform: "rotate(14deg)",
+          },
+          "40%": {
+            transform: "rotate(-4deg)",
+          },
+          "50%": {
+            transform: "rotate(10deg)",
+          },
+          "60%": {
+            transform: "rotate(0deg)",
+          },
+          "100%": {
+            transform: "rotate(0deg)",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -151,6 +194,8 @@ export default {
         "subtle-bounce": "subtle-bounce 2s ease-in-out infinite",
         "waveform": "waveform 0.5s ease-in-out infinite",
         "bounce-gentle": "bounce-gentle 1.5s ease-in-out infinite",
+        "avatar-entrance": "avatar-entrance 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards",
+        "wave-hand": "wave-hand 2.5s ease-in-out 1s",
       },
     },
   },
