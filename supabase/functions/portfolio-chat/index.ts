@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const ALLOWED_ORIGINS = [
   'https://osascvnpktwzifnafabj.lovableproject.com',
@@ -44,6 +45,78 @@ function getClientIP(req: Request): string {
   return req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 
          req.headers.get('x-real-ip') || 
          'unknown';
+}
+
+// Initialize Supabase client for logging
+function getSupabaseClient() {
+  const supabaseUrl = Deno.env.get("SUPABASE_URL");
+  const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  
+  if (!supabaseUrl || !supabaseServiceKey) {
+    console.warn("Supabase credentials not configured for logging");
+    return null;
+  }
+  
+  return createClient(supabaseUrl, supabaseServiceKey);
+}
+
+// Log conversation to database
+async function logConversation(
+  sessionId: string,
+  userMessage: string,
+  assistantResponse: string,
+  clientIP: string,
+  userAgent: string
+) {
+  const supabase = getSupabaseClient();
+  if (!supabase) return;
+  
+  try {
+    // Find or create conversation
+    let { data: conversation } = await supabase
+      .from('chat_conversations')
+      .select('id')
+      .eq('session_id', sessionId)
+      .maybeSingle();
+    
+    if (!conversation) {
+      const { data: newConversation, error: createError } = await supabase
+        .from('chat_conversations')
+        .insert({ 
+          session_id: sessionId,
+          user_ip: clientIP,
+          user_agent: userAgent
+        })
+        .select('id')
+        .single();
+      
+      if (createError) {
+        console.error("Error creating conversation:", createError);
+        return;
+      }
+      conversation = newConversation;
+    } else {
+      // Update the conversation's updated_at
+      await supabase
+        .from('chat_conversations')
+        .update({ updated_at: new Date().toISOString() })
+        .eq('id', conversation.id);
+    }
+    
+    // Insert both messages
+    const { error: msgError } = await supabase
+      .from('chat_messages')
+      .insert([
+        { conversation_id: conversation.id, role: 'user', content: userMessage },
+        { conversation_id: conversation.id, role: 'assistant', content: assistantResponse }
+      ]);
+    
+    if (msgError) {
+      console.error("Error logging messages:", msgError);
+    }
+  } catch (error) {
+    console.error("Error in logConversation:", error);
+  }
 }
 
 const SYSTEM_PROMPT = `You ARE Sohit Kumar. You're speaking directly on your portfolio website. Answer all questions in FIRST PERSON as yourself. Be warm, confident, and personable.
@@ -98,6 +171,7 @@ serve(async (req) => {
 
   // Rate limit check
   const clientIP = getClientIP(req);
+  const userAgent = req.headers.get('user-agent') || 'unknown';
   const rateLimit = checkRateLimit(clientIP);
   if (!rateLimit.allowed) {
     console.log(`Rate limit exceeded for IP: ${clientIP}`);
@@ -115,7 +189,7 @@ serve(async (req) => {
   }
 
   try {
-    const { messages } = await req.json();
+    const { messages, sessionId } = await req.json();
 
     // Input validation
     if (!Array.isArray(messages)) {
@@ -129,6 +203,9 @@ serve(async (req) => {
         throw new Error("Invalid message content (max 4000 characters per message)");
       }
     }
+
+    // Get the last user message for logging
+    const lastUserMessage = messages.filter((m: { role: string }) => m.role === 'user').pop();
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     
@@ -173,7 +250,53 @@ serve(async (req) => {
       });
     }
 
-    return new Response(response.body, {
+    // Clone the response to read it for logging while still streaming to client
+    const [streamForClient, streamForLogging] = response.body!.tee();
+    
+    // Process the logging stream in the background
+    (async () => {
+      try {
+        let fullResponse = '';
+        const reader = streamForLogging.getReader();
+        const decoder = new TextDecoder();
+        
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          
+          const chunk = decoder.decode(value, { stream: true });
+          const lines = chunk.split('\n');
+          
+          for (const line of lines) {
+            if (line.startsWith('data: ') && line !== 'data: [DONE]') {
+              try {
+                const data = JSON.parse(line.slice(6));
+                if (data.choices?.[0]?.delta?.content) {
+                  fullResponse += data.choices[0].delta.content;
+                }
+              } catch {
+                // Skip invalid JSON
+              }
+            }
+          }
+        }
+        
+        // Log the conversation
+        if (lastUserMessage && fullResponse && sessionId) {
+          await logConversation(
+            sessionId,
+            lastUserMessage.content,
+            fullResponse,
+            clientIP,
+            userAgent
+          );
+        }
+      } catch (error) {
+        console.error("Error logging conversation:", error);
+      }
+    })();
+
+    return new Response(streamForClient, {
       headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
     });
   } catch (error) {
