@@ -1,8 +1,21 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+const ALLOWED_ORIGINS = [
+  'https://osascvnpktwzifnafabj.lovableproject.com',
+  'https://sohit-kumar.com',
+  'http://localhost:5173',
+  'http://localhost:8080',
+];
+
+const getCorsHeaders = (origin: string | null) => {
+  const allowedOrigin = origin && ALLOWED_ORIGINS.some(allowed => 
+    origin === allowed || origin.endsWith('.lovableproject.com')
+  ) ? origin : ALLOWED_ORIGINS[0];
+  
+  return {
+    'Access-Control-Allow-Origin': allowedOrigin,
+    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-portfolio-token',
+  };
 };
 
 // Rate limiting configuration
@@ -76,6 +89,9 @@ Across my career, I've generated around 30 million rupees in cumulative revenue 
 Always respond as Sohit in first person. Be conversational, friendly, and professional. Keep responses concise but natural-sounding. If asked about something outside my background, politely redirect to what I actually know. Match the user's language - if they speak Hindi, respond in Hindi. If they speak Spanish, respond in Spanish.`;
 
 serve(async (req) => {
+  const origin = req.headers.get('origin');
+  const corsHeaders = getCorsHeaders(origin);
+
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
