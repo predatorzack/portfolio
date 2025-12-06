@@ -196,6 +196,7 @@ export default {
         "bounce-gentle": "bounce-gentle 1.5s ease-in-out infinite",
         "avatar-entrance": "avatar-entrance 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards",
         "wave-hand": "wave-hand 2.5s ease-in-out 1s",
+        "speech-bubble": "fade-in-up 0.5s ease-out 2.5s forwards",
       },
     },
   },
