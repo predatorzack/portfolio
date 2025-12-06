@@ -1,13 +1,32 @@
 project_id = "osascvnpktwzifnafabj"
 
-[functions.portfolio-chat]
-verify_jwt = false
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
 
-[functions.voice-transcribe]
+[db]
+port = 54322
+major_version = 15
+
+[studio]
+enabled = true
+port = 54323
+api_url = "http://127.0.0.1"
+
+[functions.portfolio-chat]
 verify_jwt = false
 
 [functions.text-to-speech]
 verify_jwt = false
 
+[functions.voice-transcribe]
+verify_jwt = false
+
 [functions.verify-admin]
+verify_jwt = false
+
+[functions.admin-data]
 verify_jwt = false
