@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowDown, Download, Linkedin, Github } from "lucide-react";
-import avatarImage from "@/assets/avatar-waving.png";
-
+import profileImage from "@/assets/profile.jpg";
 const Hero = () => {
   const scrollToSection = (id: string) => {
     document.getElementById(id)?.scrollIntoView({
@@ -35,24 +34,8 @@ const Hero = () => {
       
       <div className="container mx-auto px-6 z-10">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="mb-8 flex items-center justify-center gap-4">
-            <div className="opacity-0 animate-avatar-entrance">
-              <div className="relative inline-block animate-wave-hand origin-bottom">
-                <img 
-                  src={avatarImage} 
-                  alt="Sohit Kumar - Animated Avatar" 
-                  className="w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 mx-auto object-contain drop-shadow-[0_0_40px_rgba(6,182,212,0.4)]" 
-                />
-              </div>
-            </div>
-            {/* Speech bubble */}
-            <div className="opacity-0 animate-speech-bubble relative bg-primary-foreground/10 backdrop-blur-sm border border-primary-foreground/20 rounded-2xl px-5 py-3 max-w-[200px] md:max-w-[240px]">
-              <p className="text-primary-foreground text-sm md:text-base font-medium">
-                Hey there! Welcome to my portfolio 👋
-              </p>
-              {/* Speech bubble tail */}
-              <div className="absolute left-0 top-1/2 -translate-x-2 -translate-y-1/2 w-0 h-0 border-t-8 border-t-transparent border-b-8 border-b-transparent border-r-8 border-r-primary-foreground/10" />
-            </div>
+          <div className="mb-8 animate-fade-in-up">
+            <img src={profileImage} alt="Sohit Kumar" className="w-40 h-40 md:w-48 md:h-48 rounded-full mx-auto object-cover border-4 border-accent shadow-[0_0_40px_rgba(6,182,212,0.3)]" />
           </div>
           <h1 className="font-['Space_Grotesk'] text-5xl md:text-7xl lg:text-8xl font-bold text-primary-foreground mb-6 animate-fade-in-up [animation-delay:200ms] opacity-0 [animation-fill-mode:forwards]">
             Hi, I'm{" "}
