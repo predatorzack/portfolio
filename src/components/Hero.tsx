@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowDown, Download, Linkedin, Github } from "lucide-react";
-import profileImage from "@/assets/profile.jpg";
+import avatarImage from "@/assets/avatar-waving.png";
+
 const Hero = () => {
   const scrollToSection = (id: string) => {
     document.getElementById(id)?.scrollIntoView({
@@ -34,8 +35,14 @@ const Hero = () => {
       
       <div className="container mx-auto px-6 z-10">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="mb-8 animate-fade-in-up">
-            <img src={profileImage} alt="Sohit Kumar" className="w-40 h-40 md:w-48 md:h-48 rounded-full mx-auto object-cover border-4 border-accent shadow-[0_0_40px_rgba(6,182,212,0.3)]" />
+          <div className="mb-8 opacity-0 animate-avatar-entrance">
+            <div className="relative inline-block animate-wave-hand origin-bottom">
+              <img 
+                src={avatarImage} 
+                alt="Sohit Kumar - Animated Avatar" 
+                className="w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 mx-auto object-contain drop-shadow-[0_0_40px_rgba(6,182,212,0.4)]" 
+              />
+            </div>
           </div>
           <h1 className="font-['Space_Grotesk'] text-5xl md:text-7xl lg:text-8xl font-bold text-primary-foreground mb-6 animate-fade-in-up [animation-delay:200ms] opacity-0 [animation-fill-mode:forwards]">
             Hi, I'm{" "}
