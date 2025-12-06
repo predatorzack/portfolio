@@ -34,13 +34,22 @@ const Hero = () => {
       
       <div className="container mx-auto px-6 z-10">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="mb-8 animate-fade-in-up relative inline-block">
-            <img src={profileImage} alt="Sohit Kumar" className="w-40 h-40 md:w-48 md:h-48 rounded-full object-cover border-4 border-accent shadow-[0_0_40px_rgba(6,182,212,0.3)]" />
-            <div className="absolute left-full top-1/2 -translate-y-1/2 ml-3 bg-primary-foreground/10 backdrop-blur-sm border border-primary-foreground/20 rounded-2xl rounded-bl-none px-4 py-3 max-w-[200px] animate-fade-in-up [animation-delay:300ms] opacity-0 [animation-fill-mode:forwards] hidden md:block">
-              <p className="text-primary-foreground/90 text-sm md:text-base font-medium whitespace-nowrap">
+          <div className="mb-8 animate-fade-in-up flex flex-col items-center">
+            <div className="relative">
+              <img src={profileImage} alt="Sohit Kumar" className="w-40 h-40 md:w-48 md:h-48 rounded-full object-cover border-4 border-accent shadow-[0_0_40px_rgba(6,182,212,0.3)]" />
+              {/* Desktop speech bubble - right side */}
+              <div className="absolute left-full top-1/2 -translate-y-1/2 ml-3 bg-primary-foreground/10 backdrop-blur-sm border border-primary-foreground/20 rounded-2xl rounded-bl-none px-4 py-3 max-w-[200px] animate-fade-in-up [animation-delay:300ms] opacity-0 [animation-fill-mode:forwards] hidden md:block">
+                <p className="text-primary-foreground/90 text-base font-medium whitespace-nowrap">
+                  Hey there! Welcome 👋
+                </p>
+                <div className="absolute -left-2 bottom-3 w-0 h-0 border-t-8 border-t-transparent border-r-8 border-r-primary-foreground/10"></div>
+              </div>
+            </div>
+            {/* Mobile speech bubble - below */}
+            <div className="mt-4 bg-primary-foreground/10 backdrop-blur-sm border border-primary-foreground/20 rounded-2xl px-4 py-3 animate-fade-in-up [animation-delay:300ms] opacity-0 [animation-fill-mode:forwards] md:hidden">
+              <p className="text-primary-foreground/90 text-sm font-medium">
                 Hey there! Welcome 👋
               </p>
-              <div className="absolute -left-2 bottom-3 w-0 h-0 border-t-8 border-t-transparent border-r-8 border-r-primary-foreground/10"></div>
             </div>
           </div>
           <h1 className="font-['Space_Grotesk'] text-5xl md:text-7xl lg:text-8xl font-bold text-primary-foreground mb-6 animate-fade-in-up [animation-delay:200ms] opacity-0 [animation-fill-mode:forwards]">
