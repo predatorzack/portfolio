@@ -60,13 +60,11 @@ function getSupabaseClient() {
   return createClient(supabaseUrl, supabaseServiceKey);
 }
 
-// Log conversation to database
+// Log conversation to database (no PII stored for privacy)
 async function logConversation(
   sessionId: string,
   userMessage: string,
-  assistantResponse: string,
-  clientIP: string,
-  userAgent: string
+  assistantResponse: string
 ) {
   const supabase = getSupabaseClient();
   if (!supabase) return;
@@ -83,9 +81,7 @@ async function logConversation(
       const { data: newConversation, error: createError } = await supabase
         .from('chat_conversations')
         .insert({ 
-          session_id: sessionId,
-          user_ip: clientIP,
-          user_agent: userAgent
+          session_id: sessionId
         })
         .select('id')
         .single();
@@ -169,9 +165,8 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
-  // Rate limit check
+  // Rate limit check (IP used only for rate limiting, not stored)
   const clientIP = getClientIP(req);
-  const userAgent = req.headers.get('user-agent') || 'unknown';
   const rateLimit = checkRateLimit(clientIP);
   if (!rateLimit.allowed) {
     console.log(`Rate limit exceeded for IP: ${clientIP}`);
@@ -281,14 +276,12 @@ serve(async (req) => {
           }
         }
         
-        // Log the conversation
+        // Log the conversation (no PII stored)
         if (lastUserMessage && fullResponse && sessionId) {
           await logConversation(
             sessionId,
             lastUserMessage.content,
-            fullResponse,
-            clientIP,
-            userAgent
+            fullResponse
           );
         }
       } catch (error) {
