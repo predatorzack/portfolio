@@ -35,6 +35,11 @@ const VOICE_OPTIONS = [{
   id: 'shimmer',
   label: 'Shimmer'
 }];
+// Generate a unique session ID for this chat session
+const generateSessionId = () => {
+  return `embedded_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
+};
+
 const EmbeddedChat = () => {
   const [messages, setMessages] = useState<Message[]>([{
     role: "assistant",
@@ -48,6 +53,7 @@ const EmbeddedChat = () => {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [ttsEnabled, setTtsEnabled] = useState(true);
   const [selectedVoice, setSelectedVoice] = useState('alloy');
+  const sessionIdRef = useRef(generateSessionId());
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -76,7 +82,8 @@ const EmbeddedChat = () => {
           Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`
         },
         body: JSON.stringify({
-          messages: [...messages, userMessage].slice(1)
+          messages: [...messages, userMessage].slice(1),
+          sessionId: sessionIdRef.current
         })
       });
       if (!response.ok || !response.body) throw new Error("Failed to get response");

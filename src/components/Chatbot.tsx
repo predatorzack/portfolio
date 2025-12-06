@@ -36,6 +36,11 @@ const VOICE_OPTIONS = [{
   id: 'shimmer',
   label: 'Shimmer'
 }];
+// Generate a unique session ID for this chat session
+const generateSessionId = () => {
+  return `chat_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
+};
+
 const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([{
@@ -50,6 +55,7 @@ const Chatbot = () => {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [ttsEnabled, setTtsEnabled] = useState(true);
   const [selectedVoice, setSelectedVoice] = useState('alloy');
+  const sessionIdRef = useRef(generateSessionId());
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const audioQueueRef = useRef<string[]>([]);
@@ -171,7 +177,8 @@ const Chatbot = () => {
           Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`
         },
         body: JSON.stringify({
-          messages: [...messages, userMessage].slice(1)
+          messages: [...messages, userMessage].slice(1),
+          sessionId: sessionIdRef.current
         })
       });
       if (!response.ok || !response.body) {
