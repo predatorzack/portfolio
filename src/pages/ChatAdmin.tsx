@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { useEffect, useState, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
@@ -11,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 
 const VERIFY_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/verify-admin`;
+const ADMIN_DATA_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/admin-data`;
 
 interface Message {
   id: string;
@@ -31,6 +31,7 @@ interface Conversation {
 
 const ChatAdmin = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
@@ -41,12 +42,45 @@ const ChatAdmin = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  // Check if already authenticated via session storage
+  // Get stored admin token
+  const getAdminToken = () => sessionStorage.getItem('admin_token');
+  const setAdminToken = (token: string) => sessionStorage.setItem('admin_token', token);
+  const clearAdminToken = () => sessionStorage.removeItem('admin_token');
+
+  // Validate existing token on mount
   useEffect(() => {
-    const authToken = sessionStorage.getItem('admin_auth');
-    if (authToken === 'authenticated') {
-      setIsAuthenticated(true);
-    }
+    const validateToken = async () => {
+      const token = getAdminToken();
+      if (!token) {
+        setIsCheckingAuth(false);
+        return;
+      }
+
+      try {
+        const response = await fetch(VERIFY_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`
+          },
+          body: JSON.stringify({ action: 'validate', token })
+        });
+
+        const data = await response.json();
+        if (data.valid) {
+          setIsAuthenticated(true);
+        } else {
+          clearAdminToken();
+        }
+      } catch (error) {
+        console.error("Token validation error:", error);
+        clearAdminToken();
+      } finally {
+        setIsCheckingAuth(false);
+      }
+    };
+
+    validateToken();
   }, []);
 
   const verifyPassword = async (e: React.FormEvent) => {
@@ -66,8 +100,8 @@ const ChatAdmin = () => {
 
       const data = await response.json();
       
-      if (data.success) {
-        sessionStorage.setItem('admin_auth', 'authenticated');
+      if (data.success && data.token) {
+        setAdminToken(data.token);
         setIsAuthenticated(true);
         setPassword("");
       } else {
@@ -89,35 +123,73 @@ const ChatAdmin = () => {
     }
   };
 
-  const fetchConversations = async () => {
+  const fetchConversations = useCallback(async () => {
+    const token = getAdminToken();
+    if (!token) {
+      setIsAuthenticated(false);
+      return;
+    }
+
     setLoading(true);
     try {
-      const { data, error } = await supabase
-        .from('chat_conversations')
-        .select(`
-          *,
-          chat_messages (*)
-        `)
-        .order('updated_at', { ascending: false })
-        .limit(100);
+      const response = await fetch(ADMIN_DATA_URL, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          'x-admin-token': token
+        }
+      });
 
-      if (error) throw error;
-      setConversations(data || []);
+      if (response.status === 401) {
+        // Token expired or invalid
+        clearAdminToken();
+        setIsAuthenticated(false);
+        toast({
+          title: "Session Expired",
+          description: "Please log in again.",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      const data = await response.json();
+      setConversations(data.conversations || []);
     } catch (error) {
       console.error("Error fetching conversations:", error);
+      toast({
+        title: "Error",
+        description: "Failed to fetch conversations.",
+        variant: "destructive"
+      });
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
 
   useEffect(() => {
     if (isAuthenticated) {
       fetchConversations();
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, fetchConversations]);
 
-  const logout = () => {
-    sessionStorage.removeItem('admin_auth');
+  const logout = async () => {
+    const token = getAdminToken();
+    if (token) {
+      try {
+        await fetch(VERIFY_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`
+          },
+          body: JSON.stringify({ action: 'logout', token })
+        });
+      } catch (error) {
+        console.error("Logout error:", error);
+      }
+    }
+    clearAdminToken();
     setIsAuthenticated(false);
     setConversations([]);
     setSelectedConversation(null);
@@ -137,6 +209,15 @@ const ChatAdmin = () => {
     (acc, conv) => acc + conv.chat_messages.length,
     0
   );
+
+  // Loading state while checking auth
+  if (isCheckingAuth) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-muted-foreground">Loading...</div>
+      </div>
+    );
+  }
 
   // Password entry screen
   if (!isAuthenticated) {
