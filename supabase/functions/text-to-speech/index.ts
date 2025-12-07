@@ -125,7 +125,7 @@ serve(async (req) => {
     if (!response.ok) {
       const error = await response.text();
       console.error('OpenAI TTS error:', error);
-      throw new Error(`TTS API error: ${error}`);
+      throw new Error('Text-to-speech service temporarily unavailable');
     }
 
     const arrayBuffer = await response.arrayBuffer();
