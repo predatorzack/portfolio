@@ -7,7 +7,7 @@ const About = () => {
     <section id="about" className="py-24 bg-background">
       <div className="container mx-auto px-6">
         <div className="max-w-6xl mx-auto">
-          <h2 className="font-['Space_Grotesk'] text-4xl md:text-5xl font-bold text-foreground mb-8">
+          <h2 id="about-heading" className="font-['Space_Grotesk'] text-4xl md:text-5xl font-bold text-foreground mb-8">
             About Me
           </h2>
 

@@ -29,7 +29,7 @@ const Contact = () => {
   return <section id="contact" className="py-24 bg-section-bg">
       <div className="container mx-auto px-6">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="font-['Space_Grotesk'] text-4xl md:text-5xl font-bold text-foreground mb-8">
+          <h2 id="contact-heading" className="font-['Space_Grotesk'] text-4xl md:text-5xl font-bold text-foreground mb-8">
             Let's Connect
           </h2>
           
