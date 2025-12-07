@@ -19,6 +19,61 @@ const getCorsHeaders = (origin: string | null) => {
   };
 };
 
+// Rate limiting configuration for brute-force protection
+const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
+const MAX_FAILED_ATTEMPTS = 5; // Max failed attempts before lockout
+const rateLimitMap = new Map<string, { count: number; resetTime: number; lockedUntil?: number }>();
+
+function getClientIP(req: Request): string {
+  return req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 
+         req.headers.get('x-real-ip') || 
+         'unknown';
+}
+
+function checkRateLimit(ip: string): { allowed: boolean; retryAfter?: number } {
+  const now = Date.now();
+  const record = rateLimitMap.get(ip);
+
+  if (!record) {
+    return { allowed: true };
+  }
+
+  // Check if IP is locked out
+  if (record.lockedUntil && now < record.lockedUntil) {
+    const retryAfter = Math.ceil((record.lockedUntil - now) / 1000);
+    return { allowed: false, retryAfter };
+  }
+
+  // Reset if window has passed
+  if (now > record.resetTime) {
+    rateLimitMap.delete(ip);
+    return { allowed: true };
+  }
+
+  return { allowed: true };
+}
+
+function recordFailedAttempt(ip: string): void {
+  const now = Date.now();
+  const record = rateLimitMap.get(ip);
+
+  if (!record || now > record.resetTime) {
+    rateLimitMap.set(ip, { count: 1, resetTime: now + RATE_LIMIT_WINDOW_MS });
+  } else {
+    record.count++;
+    if (record.count >= MAX_FAILED_ATTEMPTS) {
+      // Lock out for increasing duration based on attempts (exponential backoff)
+      const lockoutMinutes = Math.min(60, Math.pow(2, record.count - MAX_FAILED_ATTEMPTS + 1));
+      record.lockedUntil = now + (lockoutMinutes * 60 * 1000);
+      console.log(`IP ${ip} locked out for ${lockoutMinutes} minutes after ${record.count} failed attempts`);
+    }
+  }
+}
+
+function clearFailedAttempts(ip: string): void {
+  rateLimitMap.delete(ip);
+}
+
 // Generate a cryptographically secure random token
 function generateSecureToken(): string {
   const array = new Uint8Array(32);
@@ -84,6 +139,22 @@ serve(async (req) => {
       );
     }
 
+    // Check rate limit before password verification
+    const clientIP = getClientIP(req);
+    const rateLimit = checkRateLimit(clientIP);
+    
+    if (!rateLimit.allowed) {
+      console.log(`Rate limited IP ${clientIP} attempting admin login`);
+      return new Response(
+        JSON.stringify({ 
+          success: false, 
+          error: 'Too many failed attempts. Please try again later.',
+          retryAfter: rateLimit.retryAfter 
+        }),
+        { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     const adminPassword = Deno.env.get('ADMIN_PASSWORD');
     
     if (!adminPassword) {
@@ -97,11 +168,17 @@ serve(async (req) => {
     const isValid = password === adminPassword;
     
     if (!isValid) {
+      // Record failed attempt for rate limiting
+      recordFailedAttempt(clientIP);
+      console.log(`Failed admin login attempt from IP ${clientIP}`);
       return new Response(
         JSON.stringify({ success: false }),
         { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
+
+    // Clear failed attempts on successful login
+    clearFailedAttempts(clientIP);
 
     // Generate secure session token
     const sessionToken = generateSecureToken();
