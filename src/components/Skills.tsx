@@ -44,7 +44,7 @@ const Skills = () => {
   return (
     <section className="py-24 bg-section-bg">
       <div className="container mx-auto px-6">
-        <h2 className="font-['Space_Grotesk'] text-4xl md:text-5xl font-bold text-foreground mb-16 text-center">
+        <h2 id="skills-heading" className="font-['Space_Grotesk'] text-4xl md:text-5xl font-bold text-foreground mb-16 text-center">
           Core Competencies
         </h2>
         

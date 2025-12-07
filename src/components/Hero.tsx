@@ -36,7 +36,14 @@ const Hero = () => {
         <div className="max-w-4xl mx-auto text-center">
           <div className="mb-8 animate-fade-in-up flex flex-col items-center">
             <div className="relative">
-              <img src={profileImage} alt="Sohit Kumar" className="w-40 h-40 md:w-48 md:h-48 rounded-full object-cover border-4 border-accent shadow-[0_0_40px_rgba(6,182,212,0.3)]" />
+              <img 
+                src={profileImage} 
+                alt="Sohit Kumar - Product Manager specializing in AI and B2B SaaS products" 
+                title="Sohit Kumar - Product Manager"
+                className="w-40 h-40 md:w-48 md:h-48 rounded-full object-cover border-4 border-accent shadow-[0_0_40px_rgba(6,182,212,0.3)]" 
+                loading="eager"
+                fetchPriority="high"
+              />
               {/* Desktop speech bubble - right side */}
               <div className="absolute left-full top-1/2 -translate-y-1/2 ml-3 bg-primary-foreground/10 backdrop-blur-sm border border-primary-foreground/20 rounded-2xl rounded-bl-none px-4 py-3 max-w-[200px] animate-fade-in-up [animation-delay:300ms] opacity-0 [animation-fill-mode:forwards] hidden md:block">
                 <p className="text-primary-foreground/90 text-base font-medium whitespace-nowrap">

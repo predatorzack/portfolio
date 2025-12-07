@@ -1,8 +1,13 @@
+# Robots.txt for sohit.me
+# Product Manager Portfolio - Sohit Kumar
+
 User-agent: Googlebot
 Allow: /
+Crawl-delay: 1
 
 User-agent: Bingbot
 Allow: /
+Crawl-delay: 1
 
 User-agent: Twitterbot
 Allow: /
@@ -10,7 +15,23 @@ Allow: /
 User-agent: facebookexternalhit
 Allow: /
 
+User-agent: LinkedInBot
+Allow: /
+
+User-agent: Slackbot
+Allow: /
+
+User-agent: WhatsApp
+Allow: /
+
+User-agent: TelegramBot
+Allow: /
+
 User-agent: *
 Allow: /
 
+# Sitemap location
 Sitemap: https://sohit.me/sitemap.xml
+
+# Host directive
+Host: https://sohit.me
