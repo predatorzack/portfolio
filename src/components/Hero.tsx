@@ -87,6 +87,11 @@ const Hero = () => {
             </Button>
           </div>
 
+          {/* Scroll Down Arrow */}
+          <button onClick={() => scrollToSection("about")} className="mt-10 text-primary-foreground/60 hover:text-primary-foreground transition-colors animate-bounce cursor-pointer" aria-label="Scroll to about section">
+            <ArrowDown size={32} />
+          </button>
+
           {/* Company Logos Section */}
           <div className="mt-16 animate-fade-in-up [animation-delay:1000ms] opacity-0 [animation-fill-mode:forwards]">
             <p className="text-primary-foreground/50 text-sm mb-6 uppercase tracking-wider">Companies I've Worked With</p>
@@ -112,9 +117,6 @@ const Hero = () => {
         </div>
       </div>
       
-      <button onClick={() => scrollToSection("about")} className="absolute bottom-12 left-1/2 -translate-x-1/2 text-primary-foreground/60 hover:text-primary-foreground transition-colors animate-bounce cursor-pointer" aria-label="Scroll to about section">
-        <ArrowDown size={32} />
-      </button>
     </section>;
 };
 export default Hero;
