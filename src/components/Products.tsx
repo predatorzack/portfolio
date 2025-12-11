@@ -2,6 +2,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { TrendingUp, ArrowDown, Users, Zap, ExternalLink, TimerReset } from "lucide-react";
 const products = [{
+  id: "product-alphadroid",
   company: "Alphadroid",
   companyUrl: "https://www.alphadroid.io/",
   role: "Product Manager",
@@ -25,6 +26,7 @@ const products = [{
   tags: ["AI/ML", "Multi-Agent Systems", "B2B SaaS", "Healthcare", "Hospitality"],
   color: "from-purple-500/5 to-pink-500/5"
 }, {
+  id: "product-electricpe",
   company: "ElectricPe",
   companyUrl: "https://electricpe.com/",
   role: "Product Manager",
@@ -48,6 +50,7 @@ const products = [{
   tags: ["B2C", "User Retention", "Gamification", "UX Design"],
   color: "from-green-500/5 to-emerald-500/5"
 }, {
+  id: "product-dotpe",
   company: "DotPe",
   companyUrl: "https://www.dotpe.in/",
   role: "Product Manager",
@@ -71,6 +74,7 @@ const products = [{
   tags: ["B2B SaaS", "FnB Tech", "Enterprise Sales", "Order Management"],
   color: "from-orange-500/5 to-red-500/5"
 }, {
+  id: "product-spinny",
   company: "Spinny",
   companyUrl: "https://www.spinny.com/",
   role: "Associate Program Manager",
@@ -103,7 +107,7 @@ const Products = () => {
         </p>
         
         <div className="space-y-8 max-w-5xl mx-auto">
-          {products.map((product, index) => <Card key={index} className={`p-8 border-border hover:border-accent transition-all duration-300 bg-gradient-to-br ${product.color} animate-fade-in-up`} style={{
+          {products.map((product, index) => <Card id={product.id} key={index} className={`p-8 border-border hover:border-accent transition-all duration-300 bg-gradient-to-br ${product.color} animate-fade-in-up`} style={{
           animationDelay: `${index * 150}ms`,
           animationFillMode: 'forwards',
           opacity: 0
