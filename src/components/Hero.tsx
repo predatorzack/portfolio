@@ -1,13 +1,16 @@
 import { Button } from "@/components/ui/button";
 import { ArrowDown, Download, Linkedin, Github } from "lucide-react";
 import profileImage from "@/assets/profile.jpg";
-import { AlphadroidLogo, ElectricPeLogo, DotPeLogo, SpinnyLogo } from "./CompanyLogos";
+import alphadroidLogo from "@/assets/logos/alphadroid-logo.png";
+import electricpeLogo from "@/assets/logos/electricpe-logo.png";
+import dotpeLogo from "@/assets/logos/dotpe-logo.png";
+import spinnyLogo from "@/assets/logos/spinny-logo.png";
 
 const companyLogos = [
-  { name: "Alphadroid", id: "product-alphadroid", Logo: AlphadroidLogo },
-  { name: "ElectricPe", id: "product-electricpe", Logo: ElectricPeLogo },
-  { name: "DotPe", id: "product-dotpe", Logo: DotPeLogo },
-  { name: "Spinny", id: "product-spinny", Logo: SpinnyLogo }
+  { name: "Alphadroid", id: "product-alphadroid", logo: alphadroidLogo },
+  { name: "ElectricPe", id: "product-electricpe", logo: electricpeLogo },
+  { name: "DotPe", id: "product-dotpe", logo: dotpeLogo },
+  { name: "Spinny", id: "product-spinny", logo: spinnyLogo }
 ];
 
 const Hero = () => {
@@ -104,10 +107,14 @@ const Hero = () => {
                 <button
                   key={company.id}
                   onClick={() => scrollToSection(company.id)}
-                  className="px-5 py-3 bg-primary-foreground/5 hover:bg-primary-foreground/10 border border-primary-foreground/10 hover:border-accent/50 rounded-xl transition-all duration-300 group cursor-pointer hover:scale-105"
+                  className="px-4 py-2 bg-primary-foreground/5 hover:bg-primary-foreground/10 border border-primary-foreground/10 hover:border-accent/50 rounded-xl transition-all duration-300 cursor-pointer hover:scale-105"
                   aria-label={`View ${company.name} work experience`}
                 >
-                  <company.Logo className="h-6 md:h-7 w-auto text-primary-foreground/80 group-hover:text-primary-foreground transition-colors" />
+                  <img 
+                    src={company.logo} 
+                    alt={`${company.name} logo`}
+                    className="h-10 md:h-12 w-auto object-contain"
+                  />
                 </button>
               ))}
             </div>
