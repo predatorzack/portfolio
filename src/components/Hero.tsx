@@ -1,18 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowDown, Download, Linkedin, Github } from "lucide-react";
 import profileImage from "@/assets/profile.jpg";
-import alphadroidLogo from "@/assets/logos/alphadroid-logo.png";
-import electricpeLogo from "@/assets/logos/electricpe-logo.png";
-import dotpeLogo from "@/assets/logos/dotpe-logo.png";
-import spinnyLogo from "@/assets/logos/spinny-logo.png";
-
-const companyLogos = [
-  { name: "Alphadroid", id: "product-alphadroid", logo: alphadroidLogo },
-  { name: "ElectricPe", id: "product-electricpe", logo: electricpeLogo },
-  { name: "DotPe", id: "product-dotpe", logo: dotpeLogo },
-  { name: "Spinny", id: "product-spinny", logo: spinnyLogo }
-];
-
 const Hero = () => {
   const scrollToSection = (id: string) => {
     document.getElementById(id)?.scrollIntoView({
@@ -102,19 +90,21 @@ const Hero = () => {
           {/* Company Logos Section */}
           <div className="mt-16 animate-fade-in-up [animation-delay:1000ms] opacity-0 [animation-fill-mode:forwards]">
             <p className="text-primary-foreground/50 text-sm mb-6 uppercase tracking-wider">Companies I've Worked With</p>
-            <div className="flex flex-wrap gap-4 md:gap-6 justify-center items-center">
-              {companyLogos.map((company) => (
+            <div className="flex flex-wrap gap-6 justify-center items-center">
+              {[
+                { name: "Alphadroid", id: "product-alphadroid" },
+                { name: "ElectricPe", id: "product-electricpe" },
+                { name: "DotPe", id: "product-dotpe" },
+                { name: "Spinny", id: "product-spinny" }
+              ].map((company) => (
                 <button
                   key={company.id}
                   onClick={() => scrollToSection(company.id)}
-                  className="px-4 py-2 bg-primary-foreground/5 hover:bg-primary-foreground/10 border border-primary-foreground/10 hover:border-accent/50 rounded-xl transition-all duration-300 cursor-pointer hover:scale-105"
-                  aria-label={`View ${company.name} work experience`}
+                  className="px-6 py-3 bg-primary-foreground/5 hover:bg-primary-foreground/10 border border-primary-foreground/10 hover:border-accent/50 rounded-lg transition-all duration-300 group cursor-pointer"
                 >
-                  <img 
-                    src={company.logo} 
-                    alt={`${company.name} logo`}
-                    className="h-10 md:h-12 w-auto object-contain"
-                  />
+                  <span className="font-['Space_Grotesk'] text-lg font-semibold text-primary-foreground/70 group-hover:text-accent transition-colors">
+                    {company.name}
+                  </span>
                 </button>
               ))}
             </div>
