@@ -86,6 +86,29 @@ const Hero = () => {
               Resume
             </Button>
           </div>
+
+          {/* Company Logos Section */}
+          <div className="mt-16 animate-fade-in-up [animation-delay:1000ms] opacity-0 [animation-fill-mode:forwards]">
+            <p className="text-primary-foreground/50 text-sm mb-6 uppercase tracking-wider">Companies I've Worked With</p>
+            <div className="flex flex-wrap gap-6 justify-center items-center">
+              {[
+                { name: "Alphadroid", id: "product-alphadroid" },
+                { name: "ElectricPe", id: "product-electricpe" },
+                { name: "DotPe", id: "product-dotpe" },
+                { name: "Spinny", id: "product-spinny" }
+              ].map((company) => (
+                <button
+                  key={company.id}
+                  onClick={() => scrollToSection(company.id)}
+                  className="px-6 py-3 bg-primary-foreground/5 hover:bg-primary-foreground/10 border border-primary-foreground/10 hover:border-accent/50 rounded-lg transition-all duration-300 group cursor-pointer"
+                >
+                  <span className="font-['Space_Grotesk'] text-lg font-semibold text-primary-foreground/70 group-hover:text-accent transition-colors">
+                    {company.name}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
       
