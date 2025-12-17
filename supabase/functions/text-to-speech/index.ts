@@ -3,6 +3,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 const ALLOWED_ORIGINS = [
   'https://osascvnpktwzifnafabj.lovableproject.com',
   'https://sohit-kumar.com',
+  'https://sohit.me',
   'http://localhost:5173',
   'http://localhost:8080',
 ];
