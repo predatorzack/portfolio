@@ -51,6 +51,7 @@ const EmbeddedChat = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [isTranscribing, setIsTranscribing] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isTtsLoading, setIsTtsLoading] = useState(false);
   const [ttsEnabled, setTtsEnabled] = useState(true);
   const [selectedVoice, setSelectedVoice] = useState('alloy');
   const sessionIdRef = useRef(generateSessionId());
@@ -153,7 +154,7 @@ const EmbeddedChat = () => {
       audioRef.current.pause();
       audioRef.current = null;
     }
-    setIsSpeaking(true);
+    setIsTtsLoading(true);
     try {
       const response = await fetch(TTS_URL, {
         method: 'POST',
@@ -170,6 +171,8 @@ const EmbeddedChat = () => {
       const data = await response.json();
       const audio = new Audio(`data:audio/mp3;base64,${data.audioContent}`);
       audioRef.current = audio;
+      setIsTtsLoading(false);
+      setIsSpeaking(true);
       audio.onended = () => {
         setIsSpeaking(false);
         audioRef.current = null;
@@ -181,6 +184,7 @@ const EmbeddedChat = () => {
       await audio.play();
     } catch (error) {
       console.error('TTS error:', error);
+      setIsTtsLoading(false);
       setIsSpeaking(false);
       toast({
         title: "Speech Error",
@@ -317,12 +321,20 @@ const EmbeddedChat = () => {
                   </DropdownMenuItem>)}
               </DropdownMenuContent>
             </DropdownMenu>
-            {isSpeaking ? <Button variant="ghost" size="sm" onClick={stopSpeaking} className="h-7 px-2 text-destructive hover:text-destructive hover:bg-destructive/10 flex items-center gap-1" title="Stop speaking">
+            {isTtsLoading ? (
+              <Button variant="ghost" size="icon" className="h-7 w-7 text-accent" disabled title="Generating audio...">
+                <Loader2 size={14} className="animate-spin" />
+              </Button>
+            ) : isSpeaking ? (
+              <Button variant="ghost" size="sm" onClick={stopSpeaking} className="h-7 px-2 text-destructive hover:text-destructive hover:bg-destructive/10 flex items-center gap-1" title="Stop speaking">
                 <Square size={10} className="fill-current" />
                 <AudioWaveform />
-              </Button> : <Button variant="ghost" size="icon" onClick={() => setTtsEnabled(!ttsEnabled)} className={`h-7 w-7 ${ttsEnabled ? 'text-accent' : 'text-muted-foreground'}`} title={ttsEnabled ? 'Disable voice' : 'Enable voice'}>
+              </Button>
+            ) : (
+              <Button variant="ghost" size="icon" onClick={() => setTtsEnabled(!ttsEnabled)} className={`h-7 w-7 ${ttsEnabled ? 'text-accent' : 'text-muted-foreground'}`} title={ttsEnabled ? 'Disable voice' : 'Enable voice'}>
                 {ttsEnabled ? <Volume2 size={14} /> : <VolumeX size={14} />}
-              </Button>}
+              </Button>
+            )}
           </div>
         </div>
       </div>
