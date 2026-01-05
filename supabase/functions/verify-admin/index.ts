@@ -1,5 +1,15 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { timingSafeEqual } from "https://deno.land/std@0.168.0/crypto/timing_safe_equal.ts";
+
+// Constant-time password comparison to prevent timing attacks
+function secureCompare(a: string, b: string): boolean {
+  const encoder = new TextEncoder();
+  const maxLength = Math.max(a.length, b.length);
+  const aBytes = encoder.encode(a.padEnd(maxLength, '\0'));
+  const bBytes = encoder.encode(b.padEnd(maxLength, '\0'));
+  return timingSafeEqual(aBytes, bBytes);
+}
 
 const ALLOWED_ORIGINS = [
   'https://osascvnpktwzifnafabj.lovableproject.com',
@@ -17,8 +27,20 @@ const getCorsHeaders = (origin: string | null) => {
   return {
     'Access-Control-Allow-Origin': allowedOrigin,
     'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+    'Access-Control-Allow-Credentials': 'true',
   };
 };
+
+// Parse cookies from request
+function parseCookies(cookieHeader: string | null): Record<string, string> {
+  if (!cookieHeader) return {};
+  return Object.fromEntries(
+    cookieHeader.split(';').map(c => {
+      const [key, ...v] = c.trim().split('=');
+      return [key, v.join('=')];
+    })
+  );
+}
 
 // Rate limiting configuration for brute-force protection
 const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
@@ -91,18 +113,29 @@ serve(async (req) => {
   }
 
   try {
-    const { password, action, token } = await req.json();
+    const { password, action } = await req.json();
+    
+    // Read token from HttpOnly cookie for validate/logout actions
+    const cookies = parseCookies(req.headers.get('cookie'));
+    const cookieToken = cookies['admin_token'];
     
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     // Handle token validation for existing sessions
-    if (action === 'validate' && token) {
+    if (action === 'validate') {
+      if (!cookieToken) {
+        return new Response(
+          JSON.stringify({ valid: false }),
+          { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+      
       const { data: session, error } = await supabase
         .from('admin_sessions')
         .select('*')
-        .eq('token', token)
+        .eq('token', cookieToken)
         .gt('expires_at', new Date().toISOString())
         .single();
 
@@ -120,15 +153,27 @@ serve(async (req) => {
     }
 
     // Handle logout
-    if (action === 'logout' && token) {
-      await supabase
-        .from('admin_sessions')
-        .delete()
-        .eq('token', token);
+    if (action === 'logout') {
+      if (cookieToken) {
+        await supabase
+          .from('admin_sessions')
+          .delete()
+          .eq('token', cookieToken);
+      }
 
+      // Clear the cookie
+      const clearCookie = 'admin_token=; HttpOnly; Secure; SameSite=Strict; Max-Age=0; Path=/';
+      
       return new Response(
         JSON.stringify({ success: true }),
-        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        { 
+          status: 200, 
+          headers: { 
+            ...corsHeaders, 
+            'Content-Type': 'application/json',
+            'Set-Cookie': clearCookie
+          } 
+        }
       );
     }
 
@@ -166,7 +211,7 @@ serve(async (req) => {
       );
     }
 
-    const isValid = password === adminPassword;
+    const isValid = secureCompare(password, adminPassword);
     
     if (!isValid) {
       // Record failed attempt for rate limiting
@@ -207,9 +252,26 @@ serve(async (req) => {
       );
     }
 
+    // Set HttpOnly cookie for the session token
+    const cookieOptions = [
+      `admin_token=${sessionToken}`,
+      'HttpOnly',
+      'Secure',
+      'SameSite=Strict',
+      `Max-Age=${24 * 60 * 60}`, // 24 hours
+      'Path=/'
+    ].join('; ');
+
     return new Response(
-      JSON.stringify({ success: true, token: sessionToken }),
-      { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      JSON.stringify({ success: true }),
+      { 
+        status: 200, 
+        headers: { 
+          ...corsHeaders, 
+          'Content-Type': 'application/json',
+          'Set-Cookie': cookieOptions
+        } 
+      }
     );
   } catch (error) {
     console.error('Verify admin error:', error);
