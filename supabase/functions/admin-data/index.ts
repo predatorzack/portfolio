@@ -16,9 +16,21 @@ const getCorsHeaders = (origin: string | null) => {
   
   return {
     'Access-Control-Allow-Origin': allowedOrigin,
-    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-admin-token',
+    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+    'Access-Control-Allow-Credentials': 'true',
   };
 };
+
+// Parse cookies from request
+function parseCookies(cookieHeader: string | null): Record<string, string> {
+  if (!cookieHeader) return {};
+  return Object.fromEntries(
+    cookieHeader.split(';').map(c => {
+      const [key, ...v] = c.trim().split('=');
+      return [key, v.join('=')];
+    })
+  );
+}
 
 serve(async (req) => {
   const origin = req.headers.get('origin');
@@ -29,11 +41,13 @@ serve(async (req) => {
   }
 
   try {
-    const adminToken = req.headers.get('x-admin-token');
+    // Read token from HttpOnly cookie
+    const cookies = parseCookies(req.headers.get('cookie'));
+    const adminToken = cookies['admin_token'];
     
     if (!adminToken) {
       return new Response(
-        JSON.stringify({ error: 'Unauthorized - No token provided' }),
+        JSON.stringify({ error: 'Unauthorized' }),
         { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -53,7 +67,7 @@ serve(async (req) => {
     if (sessionError || !session) {
       console.log('Invalid or expired session token');
       return new Response(
-        JSON.stringify({ error: 'Unauthorized - Invalid or expired token' }),
+        JSON.stringify({ error: 'Unauthorized' }),
         { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }

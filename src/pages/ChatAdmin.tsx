@@ -42,39 +42,28 @@ const ChatAdmin = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  // Get stored admin token
-  const getAdminToken = () => sessionStorage.getItem('admin_token');
-  const setAdminToken = (token: string) => sessionStorage.setItem('admin_token', token);
-  const clearAdminToken = () => sessionStorage.removeItem('admin_token');
+  // Token is now stored in HttpOnly cookie, managed by the server
+  // No client-side token storage needed
 
-  // Validate existing token on mount
+  // Validate existing session on mount (cookie sent automatically)
   useEffect(() => {
     const validateToken = async () => {
-      const token = getAdminToken();
-      if (!token) {
-        setIsCheckingAuth(false);
-        return;
-      }
-
       try {
         const response = await fetch(VERIFY_URL, {
           method: 'POST',
+          credentials: 'include', // Send cookies automatically
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`
           },
-          body: JSON.stringify({ action: 'validate', token })
+          body: JSON.stringify({ action: 'validate' })
         });
 
         const data = await response.json();
         if (data.valid) {
           setIsAuthenticated(true);
-        } else {
-          clearAdminToken();
         }
       } catch (error) {
         console.error("Token validation error:", error);
-        clearAdminToken();
       } finally {
         setIsCheckingAuth(false);
       }
@@ -91,17 +80,16 @@ const ChatAdmin = () => {
     try {
       const response = await fetch(VERIFY_URL, {
         method: 'POST',
+        credentials: 'include', // Receive and store cookies
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`
         },
         body: JSON.stringify({ password })
       });
 
       const data = await response.json();
       
-      if (data.success && data.token) {
-        setAdminToken(data.token);
+      if (data.success) {
         setIsAuthenticated(true);
         setPassword("");
       } else {
@@ -124,26 +112,18 @@ const ChatAdmin = () => {
   };
 
   const fetchConversations = useCallback(async () => {
-    const token = getAdminToken();
-    if (!token) {
-      setIsAuthenticated(false);
-      return;
-    }
-
     setLoading(true);
     try {
       const response = await fetch(ADMIN_DATA_URL, {
         method: 'GET',
+        credentials: 'include', // Send cookies automatically
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-          'x-admin-token': token
         }
       });
 
       if (response.status === 401) {
-        // Token expired or invalid
-        clearAdminToken();
+        // Session expired or invalid
         setIsAuthenticated(false);
         toast({
           title: "Session Expired",
@@ -174,22 +154,18 @@ const ChatAdmin = () => {
   }, [isAuthenticated, fetchConversations]);
 
   const logout = async () => {
-    const token = getAdminToken();
-    if (token) {
-      try {
-        await fetch(VERIFY_URL, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`
-          },
-          body: JSON.stringify({ action: 'logout', token })
-        });
-      } catch (error) {
-        console.error("Logout error:", error);
-      }
+    try {
+      await fetch(VERIFY_URL, {
+        method: 'POST',
+        credentials: 'include', // Send cookies to be cleared
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ action: 'logout' })
+      });
+    } catch (error) {
+      console.error("Logout error:", error);
     }
-    clearAdminToken();
     setIsAuthenticated(false);
     setConversations([]);
     setSelectedConversation(null);
