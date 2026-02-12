@@ -10,22 +10,22 @@ const Hero = () => {
   return <section className="min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-hero-gradient-from to-hero-gradient-to">
       {/* Social Icons - Top Right (column on mobile, row on desktop) */}
       <div className="absolute top-6 right-6 flex flex-col md:flex-row gap-3 z-20">
-        <a 
-          href="https://www.linkedin.com/in/sohitkumar/" 
-          target="_blank" 
-          rel="noopener noreferrer"
-          className="p-2 rounded-full bg-primary-foreground/10 hover:bg-accent/20 border border-primary-foreground/20 hover:border-accent transition-all duration-300 group"
-          aria-label="LinkedIn Profile"
-        >
+        <a
+        href="https://www.linkedin.com/in/sohitkumar/"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="p-2 rounded-full bg-primary-foreground/10 hover:bg-accent/20 border border-primary-foreground/20 hover:border-accent transition-all duration-300 group"
+        aria-label="LinkedIn Profile">
+
           <Linkedin size={30} className="text-primary-foreground/80 group-hover:text-accent transition-colors" />
         </a>
-        <a 
-          href="https://github.com/predatorzack" 
-          target="_blank" 
-          rel="noopener noreferrer"
-          className="p-2 rounded-full bg-primary-foreground/10 hover:bg-accent/20 border border-primary-foreground/20 hover:border-accent transition-all duration-300 group"
-          aria-label="GitHub Profile"
-        >
+        <a
+        href="https://github.com/predatorzack"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="p-2 rounded-full bg-primary-foreground/10 hover:bg-accent/20 border border-primary-foreground/20 hover:border-accent transition-all duration-300 group"
+        aria-label="GitHub Profile">
+
           <Github size={30} className="text-primary-foreground/80 group-hover:text-accent transition-colors" />
         </a>
       </div>
@@ -36,14 +36,14 @@ const Hero = () => {
         <div className="max-w-4xl mx-auto text-center">
           <div className="mb-8 animate-fade-in-up flex flex-col items-center">
             <div className="relative">
-              <img 
-                src={profileImage} 
-                alt="Sohit Kumar - Product Manager specializing in AI and B2B SaaS products" 
-                title="Sohit Kumar - Product Manager"
-                className="w-40 h-40 md:w-48 md:h-48 rounded-full object-cover border-4 border-accent shadow-[0_0_40px_rgba(6,182,212,0.3)]" 
-                loading="eager"
-                fetchPriority="high"
-              />
+              <img
+              src={profileImage}
+              alt="Sohit Kumar - Product Manager specializing in AI and B2B SaaS products"
+              title="Sohit Kumar - Product Manager"
+              className="w-40 h-40 md:w-48 md:h-48 rounded-full object-cover border-4 border-accent shadow-[0_0_40px_rgba(6,182,212,0.3)]"
+              loading="eager"
+              fetchPriority="high" />
+
               {/* Desktop speech bubble - right side */}
               <div className="absolute left-full top-1/2 -translate-y-1/2 ml-3 bg-primary-foreground/10 backdrop-blur-sm border border-primary-foreground/20 rounded-2xl rounded-bl-none px-4 py-3 max-w-[200px] animate-fade-in-up [animation-delay:300ms] opacity-0 [animation-fill-mode:forwards] hidden md:block">
                 <p className="text-primary-foreground/90 text-base font-medium whitespace-nowrap">
@@ -70,9 +70,9 @@ const Hero = () => {
             Product Manager
           </p>
           
-          <p className="text-lg text-primary-foreground/60 max-w-2xl mx-auto mb-12 animate-fade-in-up [animation-delay:600ms] opacity-0 [animation-fill-mode:forwards]">
-            5+ years leading cross-functional teams to build and scale AI-driven and B2B SaaS products. From ideation to GTM revenue, optimizing user experiences across large-scale systems.
-          </p>
+          <p className="text-lg text-primary-foreground/60 max-w-2xl mx-auto mb-12 animate-fade-in-up [animation-delay:600ms] opacity-0 [animation-fill-mode:forwards]">5 years of experience leading cross-functional teams to build and scale AI-driven and B2B SaaS products. From ideation to GTM revenue, optimizing user experiences across large-scale systems.
+
+        </p>
           
           <div className="flex flex-wrap gap-4 justify-center animate-fade-in-up [animation-delay:800ms] opacity-0 [animation-fill-mode:forwards]">
             <Button size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90 font-medium text-lg px-8 animate-glow" onClick={() => scrollToSection("products")}>
@@ -92,21 +92,21 @@ const Hero = () => {
             <p className="text-primary-foreground/50 text-sm mb-6 uppercase tracking-wider">Companies I've Worked With</p>
             <div className="flex flex-wrap gap-6 justify-center items-center">
               {[
-                { name: "Alphadroid", id: "product-alphadroid" },
-                { name: "ElectricPe", id: "product-electricpe" },
-                { name: "DotPe", id: "product-dotpe" },
-                { name: "Spinny", id: "product-spinny" }
-              ].map((company) => (
-                <button
-                  key={company.id}
-                  onClick={() => scrollToSection(company.id)}
-                  className="px-6 py-3 bg-primary-foreground/5 hover:bg-primary-foreground/10 border border-primary-foreground/10 hover:border-accent/50 rounded-lg transition-all duration-300 group cursor-pointer"
-                >
+            { name: "Alphadroid", id: "product-alphadroid" },
+            { name: "ElectricPe", id: "product-electricpe" },
+            { name: "DotPe", id: "product-dotpe" },
+            { name: "Spinny", id: "product-spinny" }].
+            map((company) =>
+            <button
+              key={company.id}
+              onClick={() => scrollToSection(company.id)}
+              className="px-6 py-3 bg-primary-foreground/5 hover:bg-primary-foreground/10 border border-primary-foreground/10 hover:border-accent/50 rounded-lg transition-all duration-300 group cursor-pointer">
+
                   <span className="font-['Space_Grotesk'] text-lg font-semibold text-primary-foreground/70 group-hover:text-accent transition-colors">
                     {company.name}
                   </span>
                 </button>
-              ))}
+            )}
             </div>
           </div>
         </div>
