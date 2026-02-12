@@ -6,7 +6,7 @@ const products = [{
   company: "Alphadroid",
   companyUrl: "https://www.alphadroid.io/",
   role: "Product Manager",
-  period: "Apr 2024 - Present",
+  period: "Apr 2024 - Dec 2025",
   title: "HeyAlpha - Conversational AI SaaS Platform",
   description: "Led strategy, roadmap, and launch of a multi-agent conversational AI platform enabling automated patient care, guest management, and enterprise workflows",
   achievements: ["Led team of 12 (devs, AI engineers, QA, design) and mentored 2 Product Analysts", "Launched 0-to-1 revenue stream, generating 5M INR in first year", "Scaled AI-driven self check-in/out and Ticketing & Routing solution for 20 hotels", "Deployed patient registration and voice navigation for 10 hospitals", "Oversaw Payment gateway and other API integrations for seamless user experience", "Enabled 30k+ user interactions per day across multiple industries"],
