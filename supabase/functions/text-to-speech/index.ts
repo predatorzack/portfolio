@@ -104,7 +104,7 @@ serve(async (req) => {
 
     const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
     if (!OPENAI_API_KEY) {
-      console.error('OPENAI_API_KEY is not configured');
+      console.error('Required configuration missing');
       return new Response(
         JSON.stringify({ error: 'Service temporarily unavailable' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -129,7 +129,7 @@ serve(async (req) => {
 
     if (!response.ok) {
       const error = await response.text();
-      console.error('OpenAI TTS error:', error);
+      console.error('TTS upstream error');
       throw new Error('Text-to-speech service temporarily unavailable');
     }
 
@@ -143,7 +143,7 @@ serve(async (req) => {
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   } catch (error: unknown) {
-    console.error('TTS error:', error);
+    console.error('TTS request failed');
     return new Response(
       JSON.stringify({ error: 'An error occurred processing your request' }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }

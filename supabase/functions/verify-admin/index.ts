@@ -204,7 +204,7 @@ serve(async (req) => {
     const adminPassword = Deno.env.get('ADMIN_PASSWORD');
     
     if (!adminPassword) {
-      console.error('ADMIN_PASSWORD not configured');
+      console.error('Required configuration missing');
       return new Response(
         JSON.stringify({ success: false, error: 'Server configuration error' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -245,7 +245,7 @@ serve(async (req) => {
       });
 
     if (insertError) {
-      console.error('Failed to create session:', insertError);
+      console.error('Session creation failed');
       return new Response(
         JSON.stringify({ success: false, error: 'Failed to create session' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -274,7 +274,7 @@ serve(async (req) => {
       }
     );
   } catch (error) {
-    console.error('Verify admin error:', error);
+    console.error('Admin verification failed');
     return new Response(
       JSON.stringify({ success: false, error: 'Invalid request' }),
       { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }

@@ -83,7 +83,7 @@ serve(async (req) => {
       .limit(100);
 
     if (fetchError) {
-      console.error('Error fetching conversations:', fetchError);
+      console.error('Data fetch failed');
       return new Response(
         JSON.stringify({ error: 'Failed to fetch data' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -95,7 +95,7 @@ serve(async (req) => {
       { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   } catch (error) {
-    console.error('Admin data error:', error);
+    console.error('Admin data request failed');
     return new Response(
       JSON.stringify({ error: 'Internal server error' }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
