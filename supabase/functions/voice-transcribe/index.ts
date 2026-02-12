@@ -118,7 +118,7 @@ serve(async (req) => {
 
     const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
     if (!openAIApiKey) {
-      console.error('OPENAI_API_KEY is not configured');
+      console.error('Required configuration missing');
       return new Response(
         JSON.stringify({ error: 'Service temporarily unavailable' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -152,7 +152,7 @@ serve(async (req) => {
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('OpenAI API error:', response.status, errorText);
+      console.error('Transcription upstream error');
       throw new Error('Transcription service temporarily unavailable');
     }
 
@@ -165,7 +165,7 @@ serve(async (req) => {
     );
 
   } catch (error) {
-    console.error('Transcription error:', error);
+    console.error('Transcription request failed');
     return new Response(
       JSON.stringify({ error: 'An error occurred processing your request' }),
       {
