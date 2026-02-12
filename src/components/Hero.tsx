@@ -70,9 +70,9 @@ const Hero = () => {
             Product Manager
           </p>
           
-          <p className="text-lg text-primary-foreground/60 max-w-2xl mx-auto mb-12 animate-fade-in-up [animation-delay:600ms] opacity-0 [animation-fill-mode:forwards]">5 years of experience leading cross-functional teams to build and scale AI-driven and B2B SaaS products. From ideation to GTM revenue, optimizing user experiences across large-scale systems.
-
-        </p>
+          <p className="text-lg text-primary-foreground/60 max-w-2xl mx-auto mb-12 animate-fade-in-up [animation-delay:600ms] opacity-0 [animation-fill-mode:forwards]">5 years of experience leading cross-functional teams to build and scale
+AI-driven and B2B SaaS products. From ideation to GTM revenue,
+optimizing user experiences across large-scale systems.</p>
           
           <div className="flex flex-wrap gap-4 justify-center animate-fade-in-up [animation-delay:800ms] opacity-0 [animation-fill-mode:forwards]">
             <Button size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90 font-medium text-lg px-8 animate-glow" onClick={() => scrollToSection("products")}>
