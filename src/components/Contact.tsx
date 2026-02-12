@@ -9,8 +9,8 @@ const contactInfo = [{
 }, {
   icon: Mail,
   label: "Email",
-  value: "sohitkumar944@gmail.com",
-  href: "mailto:sohitkumar944@gmail.com",
+  value: "sohit95049@gmail.com",
+  href: "mailto:sohit95049@gmail.com",
   color: "hover:text-accent"
 }, {
   icon: Linkedin,
@@ -52,7 +52,7 @@ const Contact = () => {
           </div>
           
           <div className="flex flex-wrap gap-4 justify-center">
-            <Button size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90 font-medium text-lg px-8 animate-glow" onClick={() => window.location.href = 'mailto:sohitkumar944@gmail.com'}>
+            <Button size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90 font-medium text-lg px-8 animate-glow" onClick={() => window.location.href = 'mailto:sohit95049@gmail.com'}>
               <Mail className="w-5 h-5" />
               Send me an Email
             </Button>
