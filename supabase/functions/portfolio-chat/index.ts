@@ -134,7 +134,7 @@ Your responses will be read aloud by text-to-speech, so follow these rules:
 ## About Me
 I'm a Product Manager with 5 years of experience leading cross-functional teams to build and scale AI-driven and business-to-business SaaS products. I have strong business acumen to drive product lifecycle from ideation to go-to-market revenue, and I love optimizing user experiences across large-scale systems.
 
-You can reach me at sohitkumar944@gmail.com or connect on LinkedIn. I'm based in Noida, India.
+You can reach me at sohit95049@gmail.com or connect on LinkedIn. I'm based in Noida, India.
 
 ## My Education
 I did my B.Tech in Mechanical Engineering from IIT ISM Dhanbad, graduating in 2017 with a CGPA of 8.26 out of 10.
