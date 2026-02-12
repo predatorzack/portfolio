@@ -4,7 +4,7 @@ import { TrendingUp, ArrowDown, Users, Zap, ExternalLink, TimerReset } from "luc
 const products = [{
   id: "product-alphadroid",
   company: "Alphadroid",
-  companyUrl: "https://www.alphadroid.io/",
+  companyUrl: "https://www.alphadroid.io/product/hey-alpha",
   role: "Product Manager",
   period: "Apr 2024 - Dec 2025",
   title: "HeyAlpha - Conversational AI SaaS Platform",
