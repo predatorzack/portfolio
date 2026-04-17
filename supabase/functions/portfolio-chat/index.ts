@@ -207,6 +207,23 @@ serve(async (req) => {
       }
     }
 
+    // Validate sessionId: optional, but if provided must match expected client-generated format
+    let validSessionId: string | undefined;
+    if (sessionId !== undefined && sessionId !== null) {
+      if (
+        typeof sessionId !== "string" ||
+        sessionId.length === 0 ||
+        sessionId.length > 128 ||
+        !/^(chat|embedded)_[A-Za-z0-9_-]{1,120}$/.test(sessionId)
+      ) {
+        return new Response(
+          JSON.stringify({ error: "Invalid sessionId format" }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+      validSessionId = sessionId;
+    }
+
     // Get the last user message for logging
     const lastUserMessage = messages.filter((m: { role: string }) => m.role === 'user').pop();
 
