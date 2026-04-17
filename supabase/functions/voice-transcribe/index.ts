@@ -43,9 +43,16 @@ function checkRateLimit(ip: string): { allowed: boolean; retryAfter?: number } {
 }
 
 function getClientIP(req: Request): string {
-  return req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 
-         req.headers.get('x-real-ip') || 
-         'unknown';
+  // Use x-real-ip (set by Supabase infra) or the LAST IP in x-forwarded-for chain
+  // (the one appended by trusted infrastructure, not client-supplied first hop).
+  const realIp = req.headers.get('x-real-ip');
+  if (realIp) return realIp.trim();
+  const forwarded = req.headers.get('x-forwarded-for');
+  if (forwarded) {
+    const ips = forwarded.split(',').map((s) => s.trim()).filter(Boolean);
+    if (ips.length > 0) return ips[ips.length - 1];
+  }
+  return 'unknown';
 }
 
 function processBase64Chunks(base64String: string, chunkSize = 32768) {
@@ -157,7 +164,7 @@ serve(async (req) => {
     }
 
     const result = await response.json();
-    console.log('Transcription result:', result.text);
+    console.log('Transcription successful, length:', result.text?.length ?? 0);
 
     return new Response(
       JSON.stringify({ text: result.text }),

@@ -42,9 +42,16 @@ function checkRateLimit(ip: string): { allowed: boolean; retryAfter?: number } {
 }
 
 function getClientIP(req: Request): string {
-  return req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 
-         req.headers.get('x-real-ip') || 
-         'unknown';
+  // Use x-real-ip (set by Supabase infra) or the LAST IP in x-forwarded-for chain
+  // (the one appended by trusted infrastructure, not client-supplied first hop).
+  const realIp = req.headers.get('x-real-ip');
+  if (realIp) return realIp.trim();
+  const forwarded = req.headers.get('x-forwarded-for');
+  if (forwarded) {
+    const ips = forwarded.split(',').map((s) => s.trim()).filter(Boolean);
+    if (ips.length > 0) return ips[ips.length - 1];
+  }
+  return 'unknown';
 }
 
 // Convert ArrayBuffer to base64 in chunks to avoid stack overflow
@@ -111,7 +118,7 @@ serve(async (req) => {
       );
     }
 
-    console.log('Generating speech for text:', text.substring(0, 100) + '...');
+    console.log('Generating speech, text length:', text.length);
 
     const response = await fetch('https://api.openai.com/v1/audio/speech', {
       method: 'POST',
