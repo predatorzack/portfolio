@@ -306,9 +306,9 @@ serve(async (req) => {
         }
         
         // Log the conversation (no PII stored)
-        if (lastUserMessage && fullResponse && sessionId) {
+        if (lastUserMessage && fullResponse && validSessionId) {
           await logConversation(
-            sessionId,
+            validSessionId,
             lastUserMessage.content,
             fullResponse
           );
